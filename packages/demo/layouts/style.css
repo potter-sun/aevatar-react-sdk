@@ -1,0 +1,33 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/antd/4.24.14/antd.min.css");
+
+.cutCorner {
+  position: relative;
+  border: 1px solid #303030;
+  display: inline-block;
+}
+
+.cutCorner:before {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  content: "";
+  border-bottom: 2rem solid #303030;
+  border-left: 2rem solid transparent;
+}
+
+.cutCorner.cutCorner__white {
+  border: 1px solid #b9b9b9;
+}
+
+.cutCorner.cutCorner__white:before {
+  border-bottom: 2rem solid #b9b9b9;
+}
+
+* {
+  scrollbar-color: #303030 transparent;
+  scrollbar-width: thin;
+}
+
+.portkey-ui-wrapper {
+  min-width: unset !important;
+}

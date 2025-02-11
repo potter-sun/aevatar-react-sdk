@@ -1,0 +1,28 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "module": "commonjs",
+    "declaration": true,
+    "moduleResolution": "node",
+    "newLine": "lf",
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2016",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "removeComments": false,
+    "strict": false,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "@aevatar-react-sdk/ui-react": ["./packages/ui-sdk/src"],
+      "@aevatar-react-sdk/core": ["./packages/core/src"]
+    }
+  },
+  "include": ["index.d.ts"]
+}
