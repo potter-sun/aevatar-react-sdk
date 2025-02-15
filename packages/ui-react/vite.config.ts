@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path";
+import path from "node:path";
 import svgr from "vite-plugin-svgr";
 import dts from "vite-plugin-dts";
 import tailwindcss from "@tailwindcss/vite";
@@ -18,14 +18,15 @@ export default defineConfig({
       entry: path.resolve(__dirname, "index.ts"),
       name: "@aevatar-react-sdk/ui-react",
       formats: ["es", "cjs"],
-      fileName: format => `index.${format}.js`,
+      fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "react-dom"],
+      external: ["react", "react-dom", "buffer"],
       output: {
         globals: {
           react: "React",
           "react-dom": "ReactDOM",
+          buffer: "Buffer",
         },
       },
     },

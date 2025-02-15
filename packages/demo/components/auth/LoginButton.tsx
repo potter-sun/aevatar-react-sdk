@@ -1,17 +1,13 @@
 import { useConnectWallet } from "@aelf-web-login/wallet-adapter-react";
-import React from "react";
 import { useCallback } from "react";
-import { navigate } from "vike/client/router";
 
 export default function LoginButton() {
-  const { connectWallet } = useConnectWallet();
+  const { connectWallet, disConnectWallet } = useConnectWallet();
 
   const doLogin = useCallback(async () => {
     try {
       const result = await connectWallet();
       console.log("connectWallet===", result);
-
-      await navigate("/auth/atomic");
     } catch (e) {
       console.error(e);
     } finally {
@@ -20,8 +16,13 @@ export default function LoginButton() {
   }, [connectWallet]);
 
   return (
-    <button className="w-full" onClick={doLogin}>
-      log in
-    </button>
+    <div className="flex gap-10">
+      <button type="button" onClick={doLogin}>
+        log in
+      </button>
+      <button type="button" onClick={disConnectWallet}>
+        disConnect
+      </button>
+    </div>
   );
 }

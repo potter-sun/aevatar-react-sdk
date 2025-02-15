@@ -1,0 +1,48 @@
+{
+  "name": "@aevatar-react-sdk/utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "homepage": "https://aevatar.ai/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aevatarAI/aevatar-react-sdk.git",
+    "directory": "packages/utils"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "prebuild": "pnpm clean",
+    "build": "pnpm build:cjs & pnpm build:esm & pnpm build:types",
+    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && pnpm esm:fix",
+    "build:types": "tsc --build tsconfig.types.json",
+    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
+    "lint": "biome lint --write .",
+    "format": "biome format --write .",
+    "start": "tsc --watch"
+  },
+  "dependencies": {
+    "@aevatar-react-sdk/types": "workspace:*"
+  },
+  "peerDependencies": {
+    "aelf-sdk": "3.4.16-alpha.7"
+  },
+  "devDependencies": {}
+}

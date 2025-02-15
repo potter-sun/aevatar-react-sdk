@@ -2,11 +2,49 @@
   "name": "@aevatar-react-sdk/core",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
   },
-  "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "homepage": "https://aevatar.ai/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aevatarAI/aevatar-react-sdk.git",
+    "directory": "packages/did"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "prebuild": "pnpm clean",
+    "build": "pnpm build:cjs & pnpm build:esm & pnpm build:types",
+    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && pnpm esm:fix",
+    "build:types": "tsc --build tsconfig.types.json",
+    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
+    "lint": "biome lint --write .",
+    "format": "biome format --write .",
+    "start": "tsc --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@portkey/request": "^2.19.0-alpha.9",
+    "@aevatar-react-sdk/services": "workspace:*",
+    "@aevatar-react-sdk/types": "workspace:*",
+    "@aevatar-react-sdk/utils": "workspace:*"
+  },
+  "peerDependencies": {},
+  "devDependencies": {}
 }
