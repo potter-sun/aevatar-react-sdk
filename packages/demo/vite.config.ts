@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 import { imagetools } from "vite-imagetools";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig((config) => ({
   plugins: [
@@ -35,6 +35,12 @@ export default defineConfig((config) => ({
         target: "https://auth-station-staging.aevatar.ai",
         changeOrigin: true,
         secure: false,
+      },
+      "/aevatarURL/api": {
+        target: "https://station-staging.aevatar.ai",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/aevatarURL\/api/, "/api"),
       },
     },
   },

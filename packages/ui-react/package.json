@@ -14,9 +14,10 @@
     "./ui-react.css": "./dist/ui-react.css"
   },
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite build --watch --mode dev",
     "build": "tsc -b && vite build",
     "lint": "biome lint --write .",
+    "format": "biome format --write .",
     "preview": "vite preview"
   },
   "devDependencies": {
@@ -31,15 +32,18 @@
     "typescript": "~5.7.2",
     "vite": "^6.1.0",
     "vite-plugin-dts": "^4.5.0",
-    "vite-plugin-svgr": "^4.3.0"
+    "vite-plugin-svgr": "^4.3.0",
+    "@tailwindcss/vite": "^4.0.6",
+    "vite-plugin-node-polyfills": "^0.23.0"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.0.6",
     "@xyflow/react": "^12.4.2",
-    "react-dnd": "^16.0.1"
+    "react-dnd": "^16.0.1",
+    "@aevatar-react-sdk/core": "workspace:*",
+    "@aevatar-react-sdk/types": "workspace:*"
   }
 }

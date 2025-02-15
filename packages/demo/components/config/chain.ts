@@ -3,7 +3,6 @@ import {
   type TChainId,
 } from "@aelf-web-login/wallet-adapter-base";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NETWORK_TYPE = (import.meta as any).env.VITE_APP_NETWORKTYPE;
 export const IS_TESTNET = NETWORK_TYPE === NetworkEnum.TESTNET;
 export const IS_MAINNET = NETWORK_TYPE === NetworkEnum.MAINNET;
