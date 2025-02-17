@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
-import { resolve, isAbsolute } from "node:path";
+import { resolve } from "node:path";
 import pkg from "./package.json";
 
 // https://vite.dev/config/
@@ -23,7 +23,7 @@ export default defineConfig({
 		rollupOptions: {
 			// make sure to externalize deps that shouldn't be bundled
 			// into your library
-			external: (id) => !(isAbsolute(id) || id.startsWith(".")),
+			external: ['aelf-sdk'],
 			output: {
 				// Provide global variables to use in the UMD build
 				// for externalized deps

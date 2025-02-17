@@ -4,6 +4,7 @@ import path from "node:path";
 import svgr from "vite-plugin-svgr";
 import dts from "vite-plugin-dts";
 import tailwindcss from "@tailwindcss/vite";
+import pkg from "./package.json";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -16,7 +17,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "index.ts"),
-      name: "@aevatar-react-sdk/ui-react",
+      name: pkg.name,
       formats: ["es", "cjs"],
       fileName: (format) => `index.${format}.js`,
     },

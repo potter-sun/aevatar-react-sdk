@@ -6,7 +6,7 @@
   "module": "./dist/index.js",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     }
@@ -39,7 +39,9 @@
     "@aevatar-react-sdk/types": "workspace:*",
     "@aevatar-react-sdk/utils": "workspace:*"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "aelf-sdk": "3.4.16-alpha.7"
+  },
   "devDependencies": {
     "vite": "^6.1.0",
     "vite-plugin-dts": "latest"
