@@ -1,0 +1,6 @@
+.aevatarai-text-gradient {
+  background: linear-gradient(91deg, #fff 15%, #999 98.97%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

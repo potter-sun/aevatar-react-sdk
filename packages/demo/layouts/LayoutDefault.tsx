@@ -2,7 +2,6 @@ import "./style.css";
 
 import "./tailwind.css";
 
-import React from "react";
 import { clientOnly } from "vike-react/clientOnly";
 
 const ProviderComponent = clientOnly(
@@ -16,8 +15,8 @@ export default function LayoutDefault({
   return (
     <ProviderComponent>
       <div className="flex flex-col min-h-[100vh]">
-        <div className="p-4 lg:p-8">
-          <div className="p-12 flex-grow">{children}</div>
+        <div>
+          <div className="p-8 flex-grow">{children}</div>
         </div>
       </div>
     </ProviderComponent>
