@@ -3,7 +3,6 @@
   "include": ["./src", "../../index.d.ts"],
   "compilerOptions": {
     "esModuleInterop": true,
-		"declarationDir": "./dist/types",
 		"module": "es2020",
 		"declaration": true,
 		"declarationMap": true,
