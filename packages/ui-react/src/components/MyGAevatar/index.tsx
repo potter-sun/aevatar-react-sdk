@@ -31,7 +31,7 @@ export default function MyGAevatar({
         className={clsx(
           "flex justify-between items-center mb-[23px] border border-[#303030]",
           "pt-[36px] pb-[17px] pl-[20px] pr-[20px]",
-          "sdk:lg:pl-[40px] lg:pr-[40px] lg:pb-[24px] lg:mb-[0]"
+          "lg:pl-[40px] lg:pr-[40px] lg:pb-[24px] lg:mb-[0]"
         )}>
         <div className="text-white font-syne text-[18px] font-semibold lowercase aevatarai-text-gradient">
           my g-aevatars
