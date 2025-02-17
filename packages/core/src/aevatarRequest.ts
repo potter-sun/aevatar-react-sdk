@@ -11,7 +11,7 @@ export interface IAevatarRequest extends IBaseRequest {
 }
 
 export class AevatarRequest extends FetchRequest implements IAevatarRequest {
-  commonHeaders: HTTPHeaders;
+  commonHeaders!: HTTPHeaders;
 
   setHeaders(headers: HTTPHeaders): void {
     this.commonHeaders = headers;

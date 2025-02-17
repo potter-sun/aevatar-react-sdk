@@ -2,13 +2,13 @@
   "name": "@aevatar-react-sdk/core",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/commonjs/index.js",
-  "module": "./dist/esm/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/commonjs/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "author": "",
@@ -26,18 +26,14 @@
     "url": "https://github.com/aevatarAI/aevatar-react-sdk.git",
     "directory": "packages/did"
   },
+  "type": "module",
   "scripts": {
-    "clean": "rm -rf dist",
-    "prebuild": "pnpm clean",
-    "build": "pnpm build:cjs & pnpm build:esm & pnpm build:types",
-    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
-    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && pnpm esm:fix",
-    "build:types": "tsc --build tsconfig.types.json",
-    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
+    "dev": "vite",
+    "build": "vite build",
     "lint": "biome lint --write .",
     "format": "biome format --write .",
-    "start": "tsc --watch",
-    "test": "jest"
+    "start": "tsc --watch"
+
   },
   "dependencies": {
     "@portkey/request": "^2.19.0-alpha.9",
@@ -46,5 +42,8 @@
     "@aevatar-react-sdk/utils": "workspace:*"
   },
   "peerDependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "vite": "^6.1.0",
+    "vite-plugin-dts": "latest"
+  }
 }
