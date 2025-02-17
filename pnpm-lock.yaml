@@ -181,10 +181,6 @@ importers:
         specifier: latest
         version: 4.5.0(@types/node@22.13.4)(rollup@4.34.7)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1))
 
-  packages/types/dist/commonjs: {}
-
-  packages/types/dist/esm: {}
-
   packages/ui-react:
     dependencies:
       '@aevatar-react-sdk/core':
@@ -196,6 +192,9 @@ importers:
       '@aevatar-react-sdk/types':
         specifier: workspace:*
         version: link:../types
+      '@aevatar-react-sdk/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@radix-ui/react-dialog':
         specifier: ^1.1.4
         version: 1.1.6(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
