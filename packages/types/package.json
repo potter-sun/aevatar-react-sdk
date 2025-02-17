@@ -2,13 +2,14 @@
   "name": "@aevatar-react-sdk/types",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/commonjs/index.js",
-  "module": "./dist/esm/index.js",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/commonjs/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "author": "",
@@ -27,18 +28,14 @@
     "directory": "packages/types"
   },
   "scripts": {
-    "clean": "rm -rf dist",
-    "prebuild": "pnpm clean",
-    "build": "pnpm build:cjs & pnpm build:esm & pnpm build:types",
-    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
-    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && pnpm esm:fix",
-    "build:types": "tsc --build tsconfig.types.json",
-    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
+    "dev": "vite",
+    "build": "vite build",
     "lint": "biome lint --write .",
-    "format": "biome format --write .",
-    "start": "tsc --watch"
+    "format": "biome format --write ."
   },
   "devDependencies": {
-    "@types/elliptic": "^6.4.14"
+    "@types/elliptic": "^6.4.14",
+    "vite": "^6.1.0",
+    "vite-plugin-dts": "latest"
   }
 }
