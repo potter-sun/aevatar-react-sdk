@@ -35,6 +35,9 @@ importers:
       '@portkey/request':
         specifier: ^2.19.0-alpha.9
         version: 2.19.0-alpha.12
+      aelf-sdk:
+        specifier: 3.4.16-alpha.7
+        version: 3.4.16-alpha.7(@babel/core@7.26.9)(eslint@9.20.1(jiti@2.4.2))
     devDependencies:
       vite:
         specifier: ^6.1.0
@@ -164,10 +167,12 @@ importers:
       ts-jest:
         specifier: ^29.0.5
         version: 29.2.5(@babel/core@7.26.9)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.9))(jest@29.7.0(@types/node@22.13.4))(typescript@5.7.3)
-
-  packages/services/dist/commonjs: {}
-
-  packages/services/dist/esm: {}
+      vite:
+        specifier: ^6.1.0
+        version: 6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1)
+      vite-plugin-dts:
+        specifier: latest
+        version: 4.5.0(@types/node@22.13.4)(rollup@4.34.7)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1))
 
   packages/types:
     devDependencies:
@@ -180,10 +185,6 @@ importers:
       vite-plugin-dts:
         specifier: latest
         version: 4.5.0(@types/node@22.13.4)(rollup@4.34.7)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1))
-
-  packages/types/dist/commonjs: {}
-
-  packages/types/dist/esm: {}
 
   packages/ui-react:
     dependencies:
@@ -308,10 +309,16 @@ importers:
       aelf-sdk:
         specifier: 3.4.16-alpha.7
         version: 3.4.16-alpha.7(@babel/core@7.26.9)(eslint@9.20.1(jiti@2.4.2))
-
-  packages/utils/dist/commonjs: {}
-
-  packages/utils/dist/esm: {}
+    devDependencies:
+      '@types/elliptic':
+        specifier: ^6.4.14
+        version: 6.4.18
+      vite:
+        specifier: ^6.1.0
+        version: 6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1)
+      vite-plugin-dts:
+        specifier: latest
+        version: 4.5.0(@types/node@22.13.4)(rollup@4.34.7)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1))
 
 packages:
 
