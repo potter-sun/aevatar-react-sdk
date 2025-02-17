@@ -4,20 +4,10 @@ import AevatarCardInner from "./AevatarCardInner";
 import "./index.css";
 export interface IAevatarCardProps {
   loading?: boolean;
+  agentInfo: IAgentInfoDetail;
 }
 
-const agentInfo: IAgentInfoDetail = {
-  id: "8c2baec4-3eca-4403-a113-b05942412770",
-  agentType: "AI Basic",
-  name: "Agent Name",
-  properties: {
-    modelProvider: "gpt",
-    bio: "this is a lively and adorable physicist",
-    topic: ["aelf.pdf", "Agent.pdf", "aelf.pdf", "Agent.pdf"],
-  },
-  grainId: "8c2baec4-3eca-4403-a113-b05942412770",
-};
-export default function AevatarCard({ loading }: IAevatarCardProps) {
+export default function AevatarCard({ loading, agentInfo }: IAevatarCardProps) {
   return (
     <div className="w-[234px] ">
       <div className="bg-[#141415] h-[288px] overflow-auto">

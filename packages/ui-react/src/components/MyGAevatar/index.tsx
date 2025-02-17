@@ -1,24 +1,69 @@
 import { useAtom } from "jotai";
 import PageLoading from "../PageLoading";
 import { loadingAtom } from "../../state/atoms";
+import EmptyIcon from "../../assets/svg/empty-gaevatar.svg?react";
 import clsx from "clsx";
 import AevatarCard from "../AevatarCard";
 import { Button } from "../ui";
 import AddIcon from "../../assets/svg/add.svg?react";
 import "./index.css";
-
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { sleep } from "@aevatar-react-sdk/utils";
+import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 export interface IMyGAevatarProps {
   height?: number | string;
   width?: number | string;
   className?: string;
+  onNewGAevatar?: () => void;
 }
+
+const agentInfo: IAgentInfoDetail = {
+  id: "8c2baec4-3eca-4403-a113-b05942412770",
+  agentType: "AI Basic",
+  name: "Agent Name",
+  properties: {
+    modelProvider: "gpt",
+    bio: "this is a lively and adorable physicist",
+    topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
+  },
+  grainId: "8c2baec4-3eca-4403-a113-b05942412770",
+};
 
 export default function MyGAevatar({
   height = "100vh",
   width,
   className,
+  onNewGAevatar,
 }: IMyGAevatarProps) {
-  const [, setShow] = useAtom(loadingAtom);
+  const [loading, setShow] = useAtom(loadingAtom);
+  const [gAevatarList, setGAevatarList] = useState<IAgentInfoDetail[]>();
+
+  const getGAevatarList = useCallback(async () => {
+    setShow(true);
+    await sleep(2000);
+    setGAevatarList(new Array(10).fill("").map(() => agentInfo));
+    setShow(false);
+  }, [setShow]);
+
+  useEffect(() => {
+    getGAevatarList();
+  }, [getGAevatarList]);
+
+  console.log(gAevatarList, loading, "gAevatarList===");
+
+  const newGA = useMemo(
+    () => (
+      <Button
+        className="p-[8px] px-[18px] gap-[10px] text-[#fff] hover:text-[#303030]"
+        onClick={onNewGAevatar}>
+        <AddIcon style={{ width: 14, height: 14 }} />
+        <span className="text-center font-syne text-[12px] font-semibold lowercase leading-[14px]">
+          new g-aevatar
+        </span>
+      </Button>
+    ),
+    [onNewGAevatar]
+  );
 
   return (
     <div
@@ -29,25 +74,39 @@ export default function MyGAevatar({
       style={{ height, width }}>
       <div
         className={clsx(
-          "flex justify-between items-center mb-[23px] border border-[#303030]",
+          "flex justify-between items-center border border-[#303030]",
           "pt-[36px] pb-[17px] pl-[20px] pr-[20px]",
-          "lg:pl-[40px] lg:pr-[40px] lg:pb-[24px] lg:mb-[0]"
+          "md:pl-[40px] md:pr-[40px] md:pb-[24px] md:border-none"
         )}>
         <div className="text-white font-syne text-[18px] font-semibold lowercase aevatarai-text-gradient">
           my g-aevatars
         </div>
-        <Button className="p-[8px] px-[18px] gap-[10px] text-[#fff] hover:text-[#303030] ">
-          <AddIcon style={{ width: 14, height: 14 }} />
-          <span className="text-center font-syne text-[12px] font-semibold lowercase leading-[14px]">
-            new g-aevatar
-          </span>
-        </Button>
+        {gAevatarList && newGA}
       </div>
-      <div className="aevatarai-gaevatar-list overflow-auto flex flex-col items-center flex-1 gap-[20px]">
-        {new Array(10).fill("").map((_, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          <AevatarCard key={index} />
-        ))}
+      <div
+        className={clsx(
+          "overflow-auto flex-1",
+          !gAevatarList && "flex justify-center items-center"
+        )}>
+        {!gAevatarList && (
+          <div className="flex flex-col justify-center items-center gap-[20px]">
+            <EmptyIcon />
+            {newGA}
+          </div>
+        )}
+        {gAevatarList && (
+          <div
+            className={clsx(
+              "grid grid-cols-1 place-items-center pt-[23px] gap-[20px]",
+              "md:grid-cols-3 md:max-w-[762px] md:pt-[0] mx-auto",
+              "aevatarai-gaevatar-list"
+            )}>
+            {gAevatarList.map((gAevatar, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <AevatarCard agentInfo={gAevatar} key={index} />
+            ))}
+          </div>
+        )}
       </div>
 
       <PageLoading />
