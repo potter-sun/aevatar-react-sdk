@@ -31,9 +31,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "biome lint --write .",
-    "format": "biome format --write .",
-    "start": "tsc --watch"
-
+    "format": "biome format --write ."
   },
   "dependencies": {
     "@portkey/request": "^2.19.0-alpha.9",
