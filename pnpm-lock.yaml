@@ -131,8 +131,6 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(rollup@4.34.7)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1))
 
-  packages/demo/dist/server: {}
-
   packages/services:
     dependencies:
       '@aevatar-react-sdk/types':
@@ -183,6 +181,9 @@ importers:
       '@aevatar-react-sdk/core':
         specifier: workspace:*
         version: link:../core
+      '@aevatar-react-sdk/services':
+        specifier: workspace:*
+        version: link:../services
       '@aevatar-react-sdk/types':
         specifier: workspace:*
         version: link:../types
@@ -222,6 +223,9 @@ importers:
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       jotai:
         specifier: ^2.11.0
         version: 2.12.0(@types/react@18.3.18)(react@18.3.1)
