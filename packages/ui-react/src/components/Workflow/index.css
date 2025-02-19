@@ -1,4 +1,4 @@
-html,
+/* html,
 body {
   margin: 0;
   font-family: sans-serif;
@@ -8,7 +8,7 @@ body {
 #app {
   width: 100vw;
   height: 100vh;
-}
+} */
 
 .dndflow {
   flex-direction: column;
@@ -55,6 +55,10 @@ body {
 
 .dndflow .selectall {
   margin-top: 10px;
+}
+.dark.react-flow {
+  background: transparent;
+  color: white;
 }
 
 @media screen and (min-width: 768px) {

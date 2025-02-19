@@ -1,15 +1,18 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
-/* @import "tailwindcss/preflight.css" layer(base); */
 @import "tailwindcss/utilities.css" layer(utilities) prefix(sdk);
 
 @layer theme {
   :root {
     --sdk-text-workflow-title: linear-gradient(to right, #ffffff, #999999);
     --sdk-border-color: #303030;
+    --sdk-gray-color: #b9b9b9;
   }
 }
 @layer utilities {
+  .sdk\:workflow-common {
+    @apply sdk:bg-black sdk:text-white;
+  }
   .sdk\:workflow-common-border {
     border-color: var(--sdk-border-color);
   }
@@ -20,9 +23,12 @@
     color: transparent;
   }
   .sdk\:workflow-common-border-stimulate {
-    @apply sdk:text-white sdk:border-[var(--sdk-border-color)];
+    @apply sdk:text-white sdk:border-[var(--sdk-border-color)] sdk:text-[12px];
   }
   .sdk\:workflow-title-button-save {
-    @apply sdk:bg-white sdk:text-black;
+    @apply sdk:bg-white sdk:text-black sdk:text-[12px];
+  }
+  .sdk\:workflow-sidebar-title {
+    @apply sdk:text-[12px] sdk:font-semibold;
   }
 }
