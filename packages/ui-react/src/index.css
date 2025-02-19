@@ -5,11 +5,24 @@
 
 @layer theme {
   :root {
-    --sdk-color-red-500: #f87171;
+    --sdk-text-workflow-title: linear-gradient(to right, #ffffff, #999999);
+    --sdk-border-color: #303030;
   }
 }
 @layer utilities {
-  .sdk\:text-red-500 {
-    color: var(--sdk-color-red-500);
+  .sdk\:workflow-common-border {
+    border-color: var(--sdk-border-color);
+  }
+  .sdk\:workflow-title {
+    background: var(--sdk-text-workflow-title);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sdk\:workflow-common-border-stimulate {
+    @apply sdk:text-white sdk:border-[var(--sdk-border-color)];
+  }
+  .sdk\:workflow-title-button-save {
+    @apply sdk:bg-white sdk:text-black;
   }
 }
