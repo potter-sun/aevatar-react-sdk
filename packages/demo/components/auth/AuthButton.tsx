@@ -17,7 +17,6 @@ export default function AuthButton() {
       walletType === WalletTypeEnum.discover ||
       walletType === WalletTypeEnum.web
     ) {
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const plainText: any = Buffer.from(plainTextOrigin)
         .toString("hex")
         .replace("0x", "");
@@ -28,10 +27,8 @@ export default function AuthButton() {
         from: string;
       } | null;
 
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const discoverInfo = walletInfo?.extraInfo as any;
       if (
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         (discoverInfo?.provider as any).methodCheck(
           "wallet_getManagerSignature"
         )
@@ -70,7 +67,6 @@ export default function AuthButton() {
       )}`;
       console.log(pubkey, "pubkey==");
 
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const caHash = await (discoverInfo?.provider as any).request({
         method: "caHash",
       });
@@ -86,17 +82,20 @@ export default function AuthButton() {
         grant_type: "signature",
       };
 
-      const result = await aevatarAI.getAuthToken(apiData);
-      console.log(result, "getAuthToken===");
+      try {
+        const result = await aevatarAI.getAuthToken(apiData);
+        console.log(result, "getAuthToken===");
+      } catch (error) {
+        console.log(error, "getAuthToken==error=");
+      }
 
       // getHomePageList
       // const result = await
     }
   }, [walletType, walletInfo, getSignature]);
   const getList = useCallback(async () => {
-    const result = await aevatarAI.services.agent.getAgentInfo(
-      "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    );
+    const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
+
     console.log(result, "result===");
   }, []);
 

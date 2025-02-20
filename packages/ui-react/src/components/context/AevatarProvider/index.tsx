@@ -36,7 +36,6 @@ export interface ProviderProps {
 }
 export default function Provider({ theme, children }: ProviderProps) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  console.log("setGlobalConfig BaseConfigProvider=>Provider theme", theme);
   useEffectOnce(() => {
     if (aevatarAI.config.storageMethod) {
       ConfigProvider.setConfig({});

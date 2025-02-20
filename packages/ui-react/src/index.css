@@ -32,3 +32,16 @@
     @apply sdk:text-[12px] sdk:font-semibold;
   }
 }
+
+.aevatarai-loading-icon {
+  animation: aevatarai-rotate 1s linear infinite;
+}
+
+@keyframes aevatarai-rotate {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

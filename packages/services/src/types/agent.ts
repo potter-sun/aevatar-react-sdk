@@ -6,6 +6,7 @@ export interface ICreateAgentParams {
 
 export interface IAgentInfo {
   id: string;
+  agentGuid: string;
   agentType: string;
   name: string;
   properties: Record<string, any>;
@@ -57,7 +58,8 @@ export interface IAgentParams {
 
 export interface IAgentsConfiguration {
   agentType: string;
-  agentParams: null | IAgentParams;
+  fullName: string;
+  agentParams: null | IAgentParams[];
 }
 
 export interface IAgentService {

@@ -82,27 +82,24 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
     });
   }
   getAllAgentsConfiguration(): Promise<IAgentsConfiguration[]> {
-    // TODO change url  /api/all-agents
-
     return this._request.send({
       method: "GET",
-      url: "/all-agents",
+      url: "/api/agent/all-agents",
       headers: this._headers,
     });
   }
   getAgents(params: IGetAgentsParams): Promise<IAgentInfo[]> {
     return this._request.send({
       method: "GET",
-      url: "/api/atomic-agents",
+      url: "/api/agent/atomic-agents",
       params,
       headers: this._headers,
     });
   }
   createAgent(params: ICreateAgentParams): Promise<IAgentInfo> {
-    // TODO change url  /api/agent
     return this._request.send({
       method: "POST",
-      url: "/agent",
+      url: "/api/agent/agent",
       params,
       headers: this._headers,
     });

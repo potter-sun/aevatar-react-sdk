@@ -42,7 +42,7 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
     if (data) return data;
 
     // 2: local storage don not has JWT token
-    return await this.getAuthTokenFromApi({
+    return this.getAuthTokenFromApi({
       pubkey: params.pubkey,
       signature: params.signature,
       plain_text: params.plain_text,
@@ -77,6 +77,7 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
 
   async getAuthTokenFromApi(params: RefreshTokenConfig) {
     const res = await this.connectServices.getConnectToken(params);
+    console.log(res, "res==getAuthTokenFromApi=");
     const token_type = res.token_type;
     const access_token = res.access_token;
 

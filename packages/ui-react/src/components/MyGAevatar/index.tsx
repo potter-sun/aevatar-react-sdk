@@ -10,15 +10,18 @@ import "./index.css";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { sleep } from "@aevatar-react-sdk/utils";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
+import CommonHeader from "../CommonHeader";
 export interface IMyGAevatarProps {
   height?: number | string;
   width?: number | string;
   className?: string;
+  maxAgentCount?: number;
   onNewGAevatar?: () => void;
+  onEditGaevatar: (id: string) => void;
 }
 
 const agentInfo: IAgentInfoDetail = {
-  id: "8c2baec4-3eca-4403-a113-b05942412770",
+  id: "e087d0d6-ec86-4b4e-8bf1-a4c616fbffdf",
   agentType: "AI Basic",
   name: "Agent Name",
   properties: {
@@ -27,15 +30,18 @@ const agentInfo: IAgentInfoDetail = {
     topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
   },
   grainId: "8c2baec4-3eca-4403-a113-b05942412770",
+  agentGuid: ""
 };
 
 export default function MyGAevatar({
   height = "100vh",
   width,
   className,
+  maxAgentCount = 999999,
   onNewGAevatar,
+  onEditGaevatar,
 }: IMyGAevatarProps) {
-  const [loading, setShow] = useAtom(loadingAtom);
+  const [, setShow] = useAtom(loadingAtom);
   const [gAevatarList, setGAevatarList] = useState<IAgentInfoDetail[]>();
 
   const getGAevatarList = useCallback(async () => {
@@ -48,8 +54,6 @@ export default function MyGAevatar({
   useEffect(() => {
     getGAevatarList();
   }, [getGAevatarList]);
-
-  console.log(gAevatarList, loading, "gAevatarList===");
 
   const newGA = useMemo(
     () => (
@@ -72,17 +76,11 @@ export default function MyGAevatar({
         className
       )}
       style={{ height, width }}>
-      <div
-        className={clsx(
-          "flex justify-between items-center border border-[#303030]",
-          "pt-[36px] pb-[17px] pl-[20px] pr-[20px]",
-          "md:pl-[40px] md:pr-[40px] md:pb-[24px] md:border-none"
-        )}>
-        <div className="text-white font-syne text-[18px] font-semibold lowercase aevatarai-text-gradient">
-          my g-aevatars
-        </div>
-        {gAevatarList && newGA}
-      </div>
+      <CommonHeader
+        leftEle={"my g-aevatars"}
+        rightEle={gAevatarList && maxAgentCount < gAevatarList.length && newGA}
+      />
+
       <div
         className={clsx(
           "overflow-auto flex-1",
@@ -102,8 +100,12 @@ export default function MyGAevatar({
               "aevatarai-gaevatar-list"
             )}>
             {gAevatarList.map((gAevatar, index) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              <AevatarCard agentInfo={gAevatar} key={index} />
+              <AevatarCard
+                agentInfo={gAevatar}
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                key={index}
+                onEditGaevatar={onEditGaevatar}
+              />
             ))}
           </div>
         )}

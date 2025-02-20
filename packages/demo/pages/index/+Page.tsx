@@ -3,7 +3,7 @@ import {
   MyButton,
   ConfigProvider,
   aevatarAI,
-  Workflow
+  Workflow,
 } from "@aevatar-react-sdk/ui-react";
 import "@aevatar-react-sdk/ui-react/ui-react.css";
 import { useCallback } from "react";
@@ -18,7 +18,7 @@ ConfigProvider.setConfig({
   // connectUrl: "https://station-staging.aevatar.ai",
   requestDefaults: {
     // baseURL: "/aevatarURL",
-    baseURL: "https://station-staging.aevatar.ai",
+    baseURL: "https://station-developer-staging.aevatar.ai/automatedx-client",
   },
 });
 
@@ -60,7 +60,6 @@ export default function Page() {
       <button type="button" onClick={onCreateAgent}>
         create Agent
       </button>
-
 
       <div className="w-full h-[500px]">
         <Workflow />
