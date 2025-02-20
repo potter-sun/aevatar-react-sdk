@@ -7,6 +7,9 @@
     --sdk-text-workflow-title: linear-gradient(to right, #ffffff, #999999);
     --sdk-border-color: #303030;
     --sdk-gray-color: #b9b9b9;
+    --sdk-workflow-background: #000000;
+    --sdk-card-background: #141415;
+    --sdk-gray-text: #606060;
   }
 }
 @layer utilities {
