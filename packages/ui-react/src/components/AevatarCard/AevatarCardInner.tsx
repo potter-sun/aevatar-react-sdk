@@ -3,13 +3,14 @@ import Setting from "../../assets/svg/setting.svg?react";
 import { useCallback } from "react";
 export interface IAevatarCardInnerProps {
   className?: string;
+  onEditGaevatar: (id: string) => void;
 }
 
 export default function AevatarCardInner({
   className,
+  onEditGaevatar,
   ...props
 }: IAevatarCardInnerProps & IAgentInfoDetail) {
-  console.log(props, "props==AevatarCardInner");
   const propertiesValue = useCallback((value: string | string[]) => {
     if (Array.isArray(value)) return value;
     return [value];
@@ -22,7 +23,10 @@ export default function AevatarCardInner({
             <div>ai basic &nbsp;</div>
             <div>#1</div>
           </div>
-          <Setting className="cursor-pointer" />
+          <Setting
+            className="cursor-pointer"
+            onClick={() => onEditGaevatar(props.id)}
+          />
         </div>
         <div className="font-mono text-[#B9B9B9] text-[11px] font-normal leading-normal lowercase">
           id: {1}

@@ -4,7 +4,7 @@ import "./index.css";
 export default function CardLoading() {
   return (
     <div className="flex justify-center items-center h-full">
-      <Loading className="aevatar-loading-icon" />
+      <Loading className="aevatarai-loading-icon" />
     </div>
   );
 }

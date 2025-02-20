@@ -12,6 +12,7 @@ export const getAevatarJWT = async (storage: IStorageSuite, key: string) => {
     if (!cData || !cData?.expiresTime) return;
     if (Date.now() + 0.5 * Day > cData?.expiresTime) return;
     return cData;
+  // biome-ignore lint/correctness/noUnusedVariables: <explanation>
   } catch (error) {
     return;
   }
