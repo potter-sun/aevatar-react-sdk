@@ -7,19 +7,35 @@ import {
   useEdgesState,
   Controls,
   useReactFlow,
-  Background,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 import "./index.css";
 
 import { DnDProvider, useDnD } from "./DnDContext";
-import ScanCardNode from "./ScanCard";
-
-const initialNodes = [];
+import ScanCardNode from "../AevatarItem4Workflow";
+import Background from "./background";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
+
+const initialNodes = [
+  {
+    id: getId(),
+    type: "ScanCard",
+    position: {
+      x: 100,
+      y: 300,
+    },
+    data: {
+      label: "ScanCard Node",
+      twitterIds: ["@vitalikbuterin", "@elonmusk", "@aelfblockchain"],
+      keywords: ["meme", "token", "alpha"],
+      method: "post",
+      isNew: true,
+    },
+  },
+];
 
 export const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
@@ -63,6 +79,7 @@ export const DnDFlow = () => {
           twitterIds: ["@vitalikbuterin", "@elonmusk", "@aelfblockchain"],
           keywords: ["meme", "token", "alpha"],
           method: "post",
+          isNew: false,
         },
       };
 
@@ -73,7 +90,7 @@ export const DnDFlow = () => {
   const nodeTypes = useMemo(() => ({ ScanCard: ScanCardNode }), []);
   return (
     <div className="dndflow sdk:w-full">
-      <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+      <div className="reactflow-wrapper sdk:relative" ref={reactFlowWrapper}>
         <ReactFlow
           colorMode="dark"
           nodes={nodes}
@@ -86,6 +103,7 @@ export const DnDFlow = () => {
           fitView
           nodeTypes={nodeTypes}
         >
+          {nodes.length === 0 && <Background></Background>}
           <Controls />
         </ReactFlow>
       </div>

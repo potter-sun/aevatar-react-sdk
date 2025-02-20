@@ -1,0 +1,29 @@
+@import "tailwindcss/theme.css" layer(theme) prefix(sdk);
+
+@layer utilities {
+  .sdk\:aevatar-item-background {
+    @apply sdk:bg-[var(--sdk-card-background)];
+  }
+
+  .sdk\:cutCorner:before {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    content: "";
+    border-left: 2rem solid transparent;
+  }
+  @media (hover: hover) {
+    .sdk\:hover\:cutCorner-border:hover:before {
+      border-bottom: 2rem solid var(--sdk-border-color);
+    }
+  }
+  .sdk\:cutCorner:after {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    content: "";
+    border-bottom: 2rem solid;
+    border-color: black;
+    border-left: 2rem solid transparent;
+  }
+}
