@@ -13,23 +13,15 @@ import {
 import "@xyflow/react/dist/style.css";
 import "./index.css";
 
-import Sidebar from "./Sidebar";
 import { DnDProvider, useDnD } from "./DnDContext";
 import ScanCardNode from "./ScanCard";
 
-const initialNodes = [
-  {
-    id: "1",
-    type: "input",
-    data: { label: "input node" },
-    position: { x: 250, y: 5 },
-  },
-];
+const initialNodes = [];
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-const DnDFlow = () => {
+export const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -49,7 +41,7 @@ const DnDFlow = () => {
   const onDrop = useCallback(
     event => {
       event.preventDefault();
-
+      console.log(type, "type");
       // check if the dropped element is valid
       if (!type) {
         return;
@@ -80,10 +72,10 @@ const DnDFlow = () => {
   );
   const nodeTypes = useMemo(() => ({ ScanCard: ScanCardNode }), []);
   return (
-    <div className="dndflow">
-      <Sidebar />
+    <div className="dndflow sdk:w-full">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
+          colorMode="dark"
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
@@ -93,10 +85,8 @@ const DnDFlow = () => {
           onDragOver={onDragOver}
           fitView
           nodeTypes={nodeTypes}
-          style={{ backgroundColor: "#F7F9FB" }}
         >
           <Controls />
-          <Background />
         </ReactFlow>
       </div>
     </div>
