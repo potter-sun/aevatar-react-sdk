@@ -21,7 +21,7 @@ export interface IMyGAevatarProps {
 }
 
 const agentInfo: IAgentInfoDetail = {
-  id: "8c2baec4-3eca-4403-a113-b05942412770",
+  id: "e087d0d6-ec86-4b4e-8bf1-a4c616fbffdf",
   agentType: "AI Basic",
   name: "Agent Name",
   properties: {
@@ -30,6 +30,7 @@ const agentInfo: IAgentInfoDetail = {
     topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
   },
   grainId: "8c2baec4-3eca-4403-a113-b05942412770",
+  agentGuid: ""
 };
 
 export default function MyGAevatar({

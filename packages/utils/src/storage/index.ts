@@ -29,7 +29,7 @@ export const setAevatarJWT = (
 ) => {
   const jwtData: TAevatarJWTData = {
     ...data,
-    expiresTime: Date.now() + (Number(data.expires_in) - 10) * 1000,
+    expiresTime: Date.now() + (Number(data.expires_in) - 20),
   };
   return storage.setItem(
     LocalStorageKey.AEVATAR_AI_ACCESS_TOKEN,

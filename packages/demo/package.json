@@ -18,6 +18,7 @@
     "@aelf-web-login/wallet-adapter-portkey-web": "0.3.2-alpha.0",
     "@aelf-web-login/wallet-adapter-react": "0.3.2-alpha.0",
     "@aevatar-react-sdk/ui-react": "workspace:*",
+    "@aevatar-react-sdk/services": "workspace:*",
     "aelf-sdk": "3.4.16-alpha.7",
     "qs": "^6.14.0",
     "react": "^18.3.1",

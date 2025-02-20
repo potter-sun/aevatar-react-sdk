@@ -81,7 +81,11 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", "w-full", className)} {...props} />
+      <div
+        ref={ref}
+        className={cn("space-y-2", "w-full", className)}
+        {...props}
+      />
     </FormItemContext.Provider>
   );
 });
@@ -91,8 +95,8 @@ const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
     React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  const { formItemId } = useFormField();
+>(({ className, children, ...props }, ref) => {
+  const { formItemId, error } = useFormField();
 
   return (
     <Label
@@ -101,9 +105,11 @@ const FormLabel = React.forwardRef<
       {...props}
       className={clsx(
         "text-[#B9B9B9] text-[12px] font-semibold lowercase self-stretch font-syne",
+        error && "text-[#FF2E2E]",
         className
-      )}
-    />
+      )}>
+      {children}
+    </Label>
   );
 });
 FormLabel.displayName = "FormLabel";
@@ -111,7 +117,7 @@ FormLabel.displayName = "FormLabel";
 const FormControl = React.forwardRef<
   React.ElementRef<typeof Slot>,
   React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
+>(({ children, ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } =
     useFormField();
 
@@ -125,8 +131,9 @@ const FormControl = React.forwardRef<
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
-      {...props}
-    />
+      {...props}>
+      <div className={clsx(error && "border border-[#FF2E2E]")}>{children}</div>
+    </Slot>
   );
 });
 FormControl.displayName = "FormControl";
@@ -163,7 +170,10 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-[12px] font-pro text-destructive text-[#FF2E2E]", className)}
+      className={cn(
+        "text-[12px] font-pro text-destructive text-[#FF2E2E]",
+        className
+      )}
       {...props}>
       {body}
     </p>

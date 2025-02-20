@@ -23,15 +23,17 @@ import DropzoneItem from "../DropzoneItem";
 import { sleep } from "@aevatar-react-sdk/utils";
 import Loading from "../../assets/svg/loading.svg?react";
 
-import type { IAgentParams } from "@aevatar-react-sdk/services";
 import { aevatarAI } from "../../utils";
+import type { IConfigurationParams } from "../types";
 
 export interface IEditGAevatarProps {
   className?: string;
   type?: "edit" | "create";
+  agentName?: string;
+  agentId?: string;
   agentTypeList: string[];
   defaultAgentType?: string;
-  configuarationParams?: IAgentParams[] | null;
+  configuarationParams?: IConfigurationParams[] | null;
   onGagentChange?: (value: string) => void;
   onBack?: () => void;
 }
@@ -47,6 +49,8 @@ enum FormItemType {
 export default function EditGAevatarInner({
   className,
   defaultAgentType,
+  agentName,
+  agentId,
   agentTypeList,
   configuarationParams,
   type = "create",
@@ -61,7 +65,8 @@ export default function EditGAevatarInner({
     setBtnLoading("deleting");
     await sleep(2000);
     setBtnLoading(undefined);
-  }, []);
+    onBack?.();
+  }, [onBack]);
 
   const rightEle = useMemo(() => {
     let text = "create";
@@ -121,13 +126,16 @@ export default function EditGAevatarInner({
   }, [onBack]);
 
   const form = useForm<any>();
-
+  console.log(agentName, "agentName==");
   useEffect(() => {
     const agentType = form.getValues("agentType");
     if (!agentType) {
       form.setValue("agentType", defaultAgentType || agentTypeList[0]);
     }
-  }, [defaultAgentType, agentTypeList, form]);
+    if (!agentName) {
+      form.setValue("agentName", agentName);
+    }
+  }, [defaultAgentType, agentTypeList, agentName, form]);
 
   const btnLoadingRef = useRef(btnLoading);
   useEffect(() => {
@@ -142,31 +150,54 @@ export default function EditGAevatarInner({
   const onSubmit = useCallback(
     async (values: any) => {
       console.log(values, "values=onSubmit");
-      if (btnLoadingRef.current) return;
-      const errorFields = [];
-      const paramsList = [];
-      fieldNames?.forEach((item) => {
-        if (!values[item]) errorFields.push(item);
-        else paramsList.push({ [item]: values[item] });
-      });
-
-      if (fieldNames && fieldNames.length > 0 && errorFields.length > 0) {
-        errorFields.forEach((item) => {
-          form.setError(item, { message: "required" });
+      try {
+        if (btnLoadingRef.current) return;
+        const errorFields = [];
+        const paramsList = [];
+        fieldNames?.forEach((item) => {
+          if (!values[item]) errorFields.push(item);
+          else paramsList.push({ [item]: values[item] });
         });
-        return;
+
+        if (!values?.agentName) {
+          errorFields.push("agentName");
+        }
+
+        if (fieldNames && fieldNames.length > 0 && errorFields.length > 0) {
+          errorFields.forEach((item) => {
+            form.setError(item, { message: "required" });
+          });
+          return;
+        }
+        setBtnLoading("saving");
+
+        console.log(Object.values(paramsList), paramsList, "paramsList===");
+
+        const properties = paramsList.reduce((acc: any, curr) => {
+          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+          return { ...acc, ...curr };
+        }, {});
+
+        const params = {
+          agentType: values.agentType,
+          name: values.agentName,
+          properties,
+        };
+        console.log(values.agentName, "values.agentName==");
+        if (type === "create") {
+          await aevatarAI.services.agent.createAgent(params);
+        } else {
+          await aevatarAI.services.agent.updateAgentInfo(agentId, params);
+        }
+
+        setBtnLoading(undefined);
+        onBack?.();
+      } catch (error: any) {
+        console.log(error, "error==");
+        setBtnLoading(undefined);
       }
-      setBtnLoading("saving");
-
-      await aevatarAI.services.agent.createAgent({
-        agentType: values.agentType,
-        name: "test",
-        properties: { ...Object.values(paramsList) },
-      });
-
-      setBtnLoading(undefined);
     },
-    [form, fieldNames]
+    [form, fieldNames, agentId, type, onBack]
   );
 
   const onAgentTypeChange = useCallback(
@@ -230,6 +261,21 @@ export default function EditGAevatarInner({
                   </FormItem>
                 )}
               />
+              <FormField
+                key={"agentName"}
+                control={form.control}
+                defaultValue={agentName}
+                name={"agentName"}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>*Atomic-Aevatar Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Atomic-Aevatar Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {configuarationParams?.map((item, index) => {
                 switch (item.type) {
                   case FormItemType.String:
@@ -239,6 +285,7 @@ export default function EditGAevatarInner({
                       <FormField
                         key={`${item.name}-${index}`}
                         control={form.control}
+                        defaultValue={item.value}
                         name={item.name}
                         render={({ field }) => (
                           <FormItem>
@@ -259,6 +306,7 @@ export default function EditGAevatarInner({
                       <FormField
                         key={`${item.name}-${index}`}
                         control={form.control}
+                        defaultValue={item.value}
                         name={item.name}
                         render={({ field }) => (
                           <FormItem>
@@ -295,14 +343,17 @@ export default function EditGAevatarInner({
                       <FormField
                         key={`${item.name}-${index}`}
                         control={form.control}
+                        defaultValue={item.value}
                         name={item.name}
                         render={() => (
                           <FormItem>
-                            <DropzoneItem
-                              form={form}
-                              name={"knowledgeBase"}
-                              accept={{ "application/pdf": [] }}
-                            />
+                            <FormControl>
+                              <DropzoneItem
+                                form={form}
+                                name={"knowledgeBase"}
+                                accept={{ "application/pdf": [] }}
+                              />
+                            </FormControl>
                           </FormItem>
                         )}
                       />
