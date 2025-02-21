@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 
-type NodeType = "input" | "default" | "output";
+type NodeType = "default" | "new";
 
 const DnDContext = createContext<
   [NodeType | null, React.Dispatch<React.SetStateAction<NodeType | null>>]

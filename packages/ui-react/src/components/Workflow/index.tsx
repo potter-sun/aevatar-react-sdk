@@ -29,9 +29,6 @@ const initialNodes = [
     },
     data: {
       label: "ScanCard Node",
-      twitterIds: ["@vitalikbuterin", "@elonmusk", "@aelfblockchain"],
-      keywords: ["meme", "token", "alpha"],
-      method: "post",
       isNew: true,
     },
   },
@@ -57,7 +54,7 @@ export const DnDFlow = () => {
   const onDrop = useCallback(
     event => {
       event.preventDefault();
-      console.log(type, "type");
+
       // check if the dropped element is valid
       if (!type) {
         return;
@@ -70,18 +67,26 @@ export const DnDFlow = () => {
         x: event.clientX,
         y: event.clientY,
       });
-      const newNode = {
-        id: getId(),
-        type: "ScanCard",
-        position,
-        data: {
-          label: "ScanCard Node",
-          twitterIds: ["@vitalikbuterin", "@elonmusk", "@aelfblockchain"],
-          keywords: ["meme", "token", "alpha"],
-          method: "post",
-          isNew: false,
-        },
-      };
+      const newNode =
+        type === "new"
+          ? {
+              id: getId(),
+              type: "ScanCard",
+              position,
+              data: {
+                label: "ScanCard Node",
+                isNew: true,
+              },
+            }
+          : {
+              id: getId(),
+              type: "ScanCard",
+              position,
+              data: {
+                label: "ScanCard Node",
+                isNew: false,
+              },
+            };
 
       setNodes(nds => nds.concat(newNode));
     },

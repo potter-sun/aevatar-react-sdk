@@ -12,7 +12,6 @@ const ScanCard: React.FC<ScanCardProps> = ({
   keywords,
   method,
 }) => {
-
   return (
     <>
       <Handle type="target" position={Position.Left} />
@@ -27,7 +26,8 @@ const ScanCard: React.FC<ScanCardProps> = ({
               <span
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
-                className="bg-gray-800 px-2 py-1 text-xs rounded">
+                className="bg-gray-800 px-2 py-1 text-xs rounded"
+              >
                 {id}
               </span>
             ))}
@@ -41,7 +41,8 @@ const ScanCard: React.FC<ScanCardProps> = ({
               <span
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
-                className="bg-gray-800 px-2 py-1 text-xs rounded">
+                className="bg-gray-800 px-2 py-1 text-xs rounded"
+              >
                 {keyword}
               </span>
             ))}
@@ -59,7 +60,7 @@ const ScanCard: React.FC<ScanCardProps> = ({
     </>
   );
 };
-const ScanCardNode: React.FC<NodeProps> = (props) => {
+const ScanCardNode: React.FC<NodeProps> = props => {
   const { data } = props;
   const {
     twitterIds = [],

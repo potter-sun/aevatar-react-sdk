@@ -20,14 +20,20 @@ export default function Sidebar() {
             α-avatar type #1
           </p>
           <div className="flex flex-col space-y-4">
-            <div onDragStart={event => onDragStart(event, "default")} draggable>
+            <div>
               <AevatarItemMini
                 name="new α-avatarα-avatarα-avatar"
                 id={1}
+                onDragStart={event => onDragStart(event, "default")}
+                draggable
               ></AevatarItemMini>
             </div>
 
-            <AevatarItemMini isnew={true}></AevatarItemMini>
+            <AevatarItemMini
+              isnew={true}
+              onDragStart={event => onDragStart(event, "new")}
+              draggable
+            ></AevatarItemMini>
           </div>
         </div>
         <div>
