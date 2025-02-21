@@ -22,7 +22,15 @@ export default function AevatarItem({ id: nodeId, data }: IProps) {
   const { isNew, onClick, deleteNode } = data;
   return (
     <>
-      <Handle type="target" position={Position.Left} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{
+          background: "#53FF8A",
+          width: 10,
+          height: 10,
+        }}
+      />
       <AevatarCardInner
         {...agentInfo}
         isNew={isNew}
@@ -30,7 +38,16 @@ export default function AevatarItem({ id: nodeId, data }: IProps) {
         deleteNode={deleteNode}
         nodeId={nodeId}
       ></AevatarCardInner>
-      <Handle type="source" position={Position.Right} id="b" />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="b"
+        style={{
+          background: "#53FF8A",
+          width: 10,
+          height: 10,
+        }}
+      />
     </>
   );
 }
