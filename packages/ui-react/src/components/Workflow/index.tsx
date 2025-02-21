@@ -52,7 +52,14 @@ export const DnDFlow = ({ onClick }: IProps) => {
   const [type] = useDnD();
 
   const onConnect = useCallback(
-    params => setEdges(eds => addEdge(params, eds) as any),
+    params =>
+      setEdges(
+        eds =>
+          addEdge(
+            { ...params, style: { strokeWidth: 2, stroke: "#B9B9B9" } },
+            eds
+          ) as any
+      ),
     []
   );
 
@@ -122,6 +129,12 @@ export const DnDFlow = ({ onClick }: IProps) => {
           onDragOver={onDragOver}
           fitView
           nodeTypes={nodeTypes}
+          defaultEdgeOptions={{ type: "smoothstep" }}
+          connectionLineStyle={{
+            strokeDasharray: "10 10",
+            stroke: "#B9B9B9",
+            strokeWidth: 2,
+          }}
         >
           {nodes.length === 0 && <Background></Background>}
           <Controls />
