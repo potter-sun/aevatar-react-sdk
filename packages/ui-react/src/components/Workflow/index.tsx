@@ -19,22 +19,32 @@ import Background from "./background";
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-const initialNodes = [
-  {
-    id: getId(),
-    type: "ScanCard",
-    position: {
-      x: 100,
-      y: 300,
+interface IProps {
+  onClick: (data: any) => void;
+}
+export const DnDFlow = ({ onClick }: IProps) => {
+  const deleteNode = nodeId => {
+    setNodes(prevNodes => prevNodes.filter(node => node.id !== nodeId));
+    setEdges(prevEdges =>
+      prevEdges.filter(edge => edge.source !== nodeId && edge.target !== nodeId)
+    );
+  };
+  const initialNodes = [
+    {
+      id: getId(),
+      type: "ScanCard",
+      position: {
+        x: 100,
+        y: 300,
+      },
+      data: {
+        label: "ScanCard Node",
+        isNew: true,
+        onClick,
+        deleteNode,
+      },
     },
-    data: {
-      label: "ScanCard Node",
-      isNew: true,
-    },
-  },
-];
-
-export const DnDFlow = () => {
+  ];
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -76,6 +86,8 @@ export const DnDFlow = () => {
               data: {
                 label: "ScanCard Node",
                 isNew: true,
+                onClick,
+                deleteNode,
               },
             }
           : {
@@ -85,6 +97,8 @@ export const DnDFlow = () => {
               data: {
                 label: "ScanCard Node",
                 isNew: false,
+                onClick,
+                deleteNode,
               },
             };
 
@@ -92,6 +106,7 @@ export const DnDFlow = () => {
     },
     [screenToFlowPosition, type]
   );
+
   const nodeTypes = useMemo(() => ({ ScanCard: ScanCardNode }), []);
   return (
     <div className="dndflow sdk:w-full">
@@ -115,11 +130,3 @@ export const DnDFlow = () => {
     </div>
   );
 };
-
-export default () => (
-  <ReactFlowProvider>
-    <DnDProvider>
-      <DnDFlow />
-    </DnDProvider>
-  </ReactFlowProvider>
-);
