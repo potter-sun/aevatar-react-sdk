@@ -3,7 +3,9 @@ import AevatarCardInner from "./AevatarCardInner";
 import { Handle, Position } from "@xyflow/react";
 
 interface IProps {
+  id: string;
   data: any;
+  onClick?: (data: any) => void;
 }
 const agentInfo: IAgentInfoDetail = {
   id: "8c2baec4-3eca-4403-a113-b05942412770",
@@ -16,12 +18,18 @@ const agentInfo: IAgentInfoDetail = {
   },
   grainId: "8c2baec4-3eca-4403-a113-b05942412770",
 };
-export default function AevatarItem({ data }: IProps) {
-  const { isNew } = data;
+export default function AevatarItem({ id: nodeId, data }: IProps) {
+  const { isNew, onClick, deleteNode } = data;
   return (
     <>
       <Handle type="target" position={Position.Left} />
-      <AevatarCardInner {...agentInfo} isNew={isNew}></AevatarCardInner>
+      <AevatarCardInner
+        {...agentInfo}
+        isNew={isNew}
+        onClick={onClick}
+        deleteNode={deleteNode}
+        nodeId={nodeId}
+      ></AevatarCardInner>
       <Handle type="source" position={Position.Right} id="b" />
     </>
   );

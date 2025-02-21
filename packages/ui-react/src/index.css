@@ -10,6 +10,8 @@
     --sdk-workflow-background: #000000;
     --sdk-card-background: #141415;
     --sdk-gray-text: #606060;
+    --sdk-success-color: #53ff8a;
+    --sdk-warning-color: #ff2e2e;
   }
 }
 @layer utilities {
@@ -18,6 +20,22 @@
   }
   .sdk\:workflow-common-border {
     border-color: var(--sdk-border-color);
+  }
+  .sdk\:workflow-common-bg {
+    @apply sdk:bg-[var(--sdk-card-background)];
+  }
+  .sdk\:workflow-common-desc-bg {
+    @apply sdk:bg-[var(--sdk-border-color)];
+  }
+  /* text color */
+  .sdk\:workflow-common-gray-text {
+    @apply sdk:text-[var(--sdk-gray-color)];
+  }
+  .sdk\:workflow-common-success-text {
+    @apply sdk:text-[var(--sdk-success-color)];
+  }
+  .sdk\:workflow-common-warning-text {
+    @apply sdk:text-[var(--sdk-warning-color)];
   }
   .sdk\:workflow-title {
     background: var(--sdk-text-workflow-title);

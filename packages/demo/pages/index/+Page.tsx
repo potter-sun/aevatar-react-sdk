@@ -60,10 +60,6 @@ export default function Page() {
       <button type="button" onClick={onCreateAgent}>
         create Agent
       </button>
-
-      <div className="w-full h-[500px]">
-        <Workflow />
-      </div>
     </div>
   );
 }

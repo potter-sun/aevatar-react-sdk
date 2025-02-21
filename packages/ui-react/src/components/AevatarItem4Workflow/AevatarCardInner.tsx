@@ -7,19 +7,33 @@ import { Button } from "../ui";
 export interface IAevatarCardInnerProps {
   className?: string;
   isNew?: boolean;
+  onClick?: (data: any) => void;
+  deleteNode: any;
+  nodeId?: string;
 }
 
 export default function AevatarCardInner({
   className,
   isNew,
+  onClick,
+  deleteNode,
+  nodeId,
   ...props
 }: IAevatarCardInnerProps & IAgentInfoDetail) {
   const propertiesValue = useCallback((value: string | string[]) => {
     if (Array.isArray(value)) return value;
     return [value];
   }, []);
+  const handleDeleteClick = e => {
+    e.stopPropagation();
+    deleteNode(nodeId);
+  };
   return isNew ? (
-    <div>
+    <div
+      onClick={() => {
+        onClick?.(isNew);
+      }}
+    >
       <div
         className={`sdk:aevatar-item-background sdk:cutCorner sdk:hover:border sdk:hover:cutCorner-border sdk:workflow-common-border sdk:w-[234px] ${className}`}
       >
@@ -29,7 +43,10 @@ export default function AevatarCardInner({
               <div>ai basic &nbsp;</div>
               <div>#1</div>
             </div>
-            <Delete className="sdk:cursor-pointer" />
+            <Delete
+              className="sdk:cursor-pointer"
+              onClick={handleDeleteClick}
+            />
           </div>
           <div className="sdk:font-mono sdk:text-[--sdk-gray-color] sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
             id: {1}
@@ -43,15 +60,24 @@ export default function AevatarCardInner({
       </div>
     </div>
   ) : (
-    <div>
-      <div className={`sdk:aevatar-item-background sdk:w-[234px] ${className}`}>
+    <div
+      onClick={() => {
+        onClick?.(isNew);
+      }}
+    >
+      <div
+        className={`sdk:aevatar-item-background sdk:w-[234px] sdk:cutCorner sdk:hover:border sdk:hover:cutCorner-border sdk:workflow-common-border ${className}`}
+      >
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <div className="sdk:flex sdk:font-syne sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:pb-[9px]">
               <div>ai basic &nbsp;</div>
               <div>#1</div>
             </div>
-            <Delete className="sdk:cursor-pointer" />
+            <Delete
+              className="sdk:cursor-pointer"
+              onClick={handleDeleteClick}
+            />
           </div>
           <div className="sdk:font-mono sdk:text-[--sdk-gray-color] sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
             id: {1}

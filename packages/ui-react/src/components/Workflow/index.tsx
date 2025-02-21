@@ -19,25 +19,32 @@ import Background from "./background";
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-const initialNodes = [
-  {
-    id: getId(),
-    type: "ScanCard",
-    position: {
-      x: 100,
-      y: 300,
+interface IProps {
+  onClick: (data: any) => void;
+}
+export const DnDFlow = ({ onClick }: IProps) => {
+  const deleteNode = nodeId => {
+    setNodes(prevNodes => prevNodes.filter(node => node.id !== nodeId));
+    setEdges(prevEdges =>
+      prevEdges.filter(edge => edge.source !== nodeId && edge.target !== nodeId)
+    );
+  };
+  const initialNodes = [
+    {
+      id: getId(),
+      type: "ScanCard",
+      position: {
+        x: 100,
+        y: 300,
+      },
+      data: {
+        label: "ScanCard Node",
+        isNew: true,
+        onClick,
+        deleteNode,
+      },
     },
-    data: {
-      label: "ScanCard Node",
-      twitterIds: ["@vitalikbuterin", "@elonmusk", "@aelfblockchain"],
-      keywords: ["meme", "token", "alpha"],
-      method: "post",
-      isNew: true,
-    },
-  },
-];
-
-export const DnDFlow = () => {
+  ];
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -57,7 +64,7 @@ export const DnDFlow = () => {
   const onDrop = useCallback(
     event => {
       event.preventDefault();
-      console.log(type, "type");
+
       // check if the dropped element is valid
       if (!type) {
         return;
@@ -70,23 +77,36 @@ export const DnDFlow = () => {
         x: event.clientX,
         y: event.clientY,
       });
-      const newNode = {
-        id: getId(),
-        type: "ScanCard",
-        position,
-        data: {
-          label: "ScanCard Node",
-          twitterIds: ["@vitalikbuterin", "@elonmusk", "@aelfblockchain"],
-          keywords: ["meme", "token", "alpha"],
-          method: "post",
-          isNew: false,
-        },
-      };
+      const newNode =
+        type === "new"
+          ? {
+              id: getId(),
+              type: "ScanCard",
+              position,
+              data: {
+                label: "ScanCard Node",
+                isNew: true,
+                onClick,
+                deleteNode,
+              },
+            }
+          : {
+              id: getId(),
+              type: "ScanCard",
+              position,
+              data: {
+                label: "ScanCard Node",
+                isNew: false,
+                onClick,
+                deleteNode,
+              },
+            };
 
       setNodes(nds => nds.concat(newNode));
     },
     [screenToFlowPosition, type]
   );
+
   const nodeTypes = useMemo(() => ({ ScanCard: ScanCardNode }), []);
   return (
     <div className="dndflow sdk:w-full">
@@ -110,11 +130,3 @@ export const DnDFlow = () => {
     </div>
   );
 };
-
-export default () => (
-  <ReactFlowProvider>
-    <DnDProvider>
-      <DnDFlow />
-    </DnDProvider>
-  </ReactFlowProvider>
-);
