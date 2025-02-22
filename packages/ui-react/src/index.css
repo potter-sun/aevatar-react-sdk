@@ -12,6 +12,15 @@
     --sdk-gray-text: #606060;
     --sdk-success-color: #53ff8a;
     --sdk-warning-color: #ff2e2e;
+    /* https://tailwindcss.com/docs/responsive-design#using-custom-breakpoints */
+    --sdk-breakpoint-sm: 640px;
+    --sdk-breakpoint-md: 768px;
+    --sdk-breakpoint-medium: 800px;
+    --sdk-breakpoint-lg: 1024px;
+    --sdk-breakpoint-xl: 1280px;
+    --sdk-breakpoint-2xl: 1440px;
+    --sdk-breakpoint-3xl: 1920px;
+    --sdk-breakpoint-4xl: 2560px;
   }
 }
 @layer utilities {
