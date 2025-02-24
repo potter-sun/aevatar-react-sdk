@@ -4,26 +4,26 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-syne text-[15px] font-semibold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "sdk:inline-flex sdk:items-center sdk:justify-center sdk:gap-2 sdk:whitespace-nowrap sdk:font-syne sdk:text-[15px] sdk:font-semibold sdk:ring-offset-background sdk:transition-colors sdk:focus-visible:outline-none sdk:focus-visible:ring-2 sdk:focus-visible:ring-ring sdk:focus-visible:ring-offset-2 sdk:disabled:pointer-events-none sdk:disabled:opacity-50 [&_svg]:sdk:pointer-events-none [&_svg]:sdk:size-4 [&_svg]:sdk:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "border-solid border-[0.75px] border-[#606060] hover:bg-white hover:text-black",
+          "sdk:border-solid sdk:border-[0.75px] sdk:border-[#606060] sdk:hover:bg-white sdk:hover:text-black",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "sdk:bg-destructive sdk:text-destructive-foreground sdk:hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "sdk:border sdk:border-input sdk:bg-background sdk:hover:bg-accent sdk:hover:text-accent-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "sdk:bg-secondary sdk:text-secondary-foreground sdk:hover:bg-secondary/80",
+        ghost: "sdk:hover:bg-accent sdk:hover:text-accent-foreground",
+        link: "sdk:text-primary sdk:underline-offset-4 sdk:hover:underline",
       },
       size: {
-        default: "px-[18px] py-[8px]",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "sdk:px-[18px] sdk:py-[8px]",
+        sm: "sdk:h-9 sdk:rounded-md sdk:px-3",
+        lg: "sdk:h-11 sdk:rounded-md sdk:px-8",
+        icon: "sdk:h-10 sdk:w-10",
       },
     },
     defaultVariants: {

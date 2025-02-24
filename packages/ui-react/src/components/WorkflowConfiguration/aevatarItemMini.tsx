@@ -8,11 +8,17 @@ interface IProps {
   isnew?: boolean;
   id?: string | number;
   name?: string;
+  onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
+  draggable?: boolean;
 }
 export default function AevatarItem(props: IProps) {
-  const { isnew, id, name } = props;
+  const { isnew, id, name, onDragStart, draggable } = props;
   return (
-    <div className="sdk:relative sdk:w-[124px] sdk:h-[45px] sdk:cursor-pointer group">
+    <div
+      className="sdk:relative sdk:w-[124px] sdk:h-[45px] sdk:cursor-pointer group"
+      onDragStart={onDragStart}
+      draggable={draggable}
+    >
       {isnew ? (
         <>
           <NewAevatarItemIcon className="sdk:absolute group-hover:hidden"></NewAevatarItemIcon>

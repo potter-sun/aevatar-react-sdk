@@ -7,21 +7,44 @@ import {
   useEdgesState,
   Controls,
   useReactFlow,
-  Background,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 import "./index.css";
 
 import { DnDProvider, useDnD } from "./DnDContext";
-import ScanCardNode from "./ScanCard";
-
-const initialNodes = [];
+import ScanCardNode from "../AevatarItem4Workflow";
+import Background from "./background";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-export const DnDFlow = () => {
+interface IProps {
+  onClick: (data: any) => void;
+}
+export const DnDFlow = ({ onClick }: IProps) => {
+  const deleteNode = nodeId => {
+    setNodes(prevNodes => prevNodes.filter(node => node.id !== nodeId));
+    setEdges(prevEdges =>
+      prevEdges.filter(edge => edge.source !== nodeId && edge.target !== nodeId)
+    );
+  };
+  const initialNodes = [
+    {
+      id: getId(),
+      type: "ScanCard",
+      position: {
+        x: 100,
+        y: 300,
+      },
+      data: {
+        label: "ScanCard Node",
+        isNew: true,
+        onClick,
+        deleteNode,
+      },
+    },
+  ];
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -29,7 +52,14 @@ export const DnDFlow = () => {
   const [type] = useDnD();
 
   const onConnect = useCallback(
-    params => setEdges(eds => addEdge(params, eds) as any),
+    params =>
+      setEdges(
+        eds =>
+          addEdge(
+            { ...params, style: { strokeWidth: 2, stroke: "#B9B9B9" } },
+            eds
+          ) as any
+      ),
     []
   );
 
@@ -41,7 +71,7 @@ export const DnDFlow = () => {
   const onDrop = useCallback(
     event => {
       event.preventDefault();
-      console.log(type, "type");
+
       // check if the dropped element is valid
       if (!type) {
         return;
@@ -54,26 +84,40 @@ export const DnDFlow = () => {
         x: event.clientX,
         y: event.clientY,
       });
-      const newNode = {
-        id: getId(),
-        type: "ScanCard",
-        position,
-        data: {
-          label: "ScanCard Node",
-          twitterIds: ["@vitalikbuterin", "@elonmusk", "@aelfblockchain"],
-          keywords: ["meme", "token", "alpha"],
-          method: "post",
-        },
-      };
+      const newNode =
+        type === "new"
+          ? {
+              id: getId(),
+              type: "ScanCard",
+              position,
+              data: {
+                label: "ScanCard Node",
+                isNew: true,
+                onClick,
+                deleteNode,
+              },
+            }
+          : {
+              id: getId(),
+              type: "ScanCard",
+              position,
+              data: {
+                label: "ScanCard Node",
+                isNew: false,
+                onClick,
+                deleteNode,
+              },
+            };
 
       setNodes(nds => nds.concat(newNode));
     },
     [screenToFlowPosition, type]
   );
+
   const nodeTypes = useMemo(() => ({ ScanCard: ScanCardNode }), []);
   return (
     <div className="dndflow sdk:w-full">
-      <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+      <div className="reactflow-wrapper sdk:relative" ref={reactFlowWrapper}>
         <ReactFlow
           colorMode="dark"
           nodes={nodes}
@@ -85,18 +129,17 @@ export const DnDFlow = () => {
           onDragOver={onDragOver}
           fitView
           nodeTypes={nodeTypes}
+          defaultEdgeOptions={{ type: "smoothstep" }}
+          connectionLineStyle={{
+            strokeDasharray: "10 10",
+            stroke: "#B9B9B9",
+            strokeWidth: 2,
+          }}
         >
+          {nodes.length === 0 && <Background></Background>}
           <Controls />
         </ReactFlow>
       </div>
     </div>
   );
 };
-
-export default () => (
-  <ReactFlowProvider>
-    <DnDProvider>
-      <DnDFlow />
-    </DnDProvider>
-  </ReactFlowProvider>
-);
