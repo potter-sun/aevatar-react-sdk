@@ -11,32 +11,35 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { sleep } from "@aevatar-react-sdk/utils";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import CommonHeader from "../CommonHeader";
+import { aevatarAI } from "../../utils";
 export interface IMyGAevatarProps {
   height?: number | string;
   width?: number | string;
   className?: string;
+  userAddress: string;
   maxAgentCount?: number;
   onNewGAevatar?: () => void;
   onEditGaevatar: (id: string) => void;
 }
 
-const agentInfo: IAgentInfoDetail = {
-  id: "e087d0d6-ec86-4b4e-8bf1-a4c616fbffdf",
-  agentType: "AI Basic",
-  name: "Agent Name",
-  properties: {
-    modelProvider: "gpt",
-    bio: "this is a lively and adorable physicist",
-    topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
-  },
-  grainId: "8c2baec4-3eca-4403-a113-b05942412770",
-  agentGuid: ""
-};
+// const agentInfo: IAgentInfoDetail = {
+//   id: "e087d0d6-ec86-4b4e-8bf1-a4c616fbffdf",
+//   agentType: "AI Basic",
+//   name: "Agent Name",
+//   properties: {
+//     modelProvider: "gpt",
+//     bio: "this is a lively and adorable physicist",
+//     topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
+//   },
+//   grainId: "8c2baec4-3eca-4403-a113-b05942412770",
+//   agentGuid: "",
+// };
 
 export default function MyGAevatar({
   height = "100vh",
   width,
   className,
+  userAddress,
   maxAgentCount = 999999,
   onNewGAevatar,
   onEditGaevatar,
@@ -46,10 +49,16 @@ export default function MyGAevatar({
 
   const getGAevatarList = useCallback(async () => {
     setShow(true);
-    await sleep(2000);
-    setGAevatarList(new Array(10).fill("").map(() => agentInfo));
+    // await sleep(2000);
+    // setGAevatarList(new Array(10).fill("").map(() => agentInfo));
+    const list = await aevatarAI.services.agent.getAgents({
+      userAddress,
+      pageIndex: 0,
+      pageSize: 100,
+    });
+    setGAevatarList(list);
     setShow(false);
-  }, [setShow]);
+  }, [setShow, userAddress]);
 
   useEffect(() => {
     getGAevatarList();
@@ -86,9 +95,9 @@ export default function MyGAevatar({
           "overflow-auto flex-1",
           !gAevatarList && "flex justify-center items-center"
         )}>
-        {!gAevatarList && (
+        {(!gAevatarList || gAevatarList?.length === 0) && (
           <div className="flex flex-col justify-center items-center gap-[20px]">
-            <EmptyIcon />
+            <EmptyIcon role="img" data-testid="empty-icon" id="empty-icon" />
             {newGA}
           </div>
         )}

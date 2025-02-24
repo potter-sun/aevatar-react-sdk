@@ -13,23 +13,26 @@ export interface IAevatarRequest extends IBaseRequest {
 export class AevatarRequest extends FetchRequest implements IAevatarRequest {
   commonHeaders!: HTTPHeaders;
 
-  setHeaders(headers: HTTPHeaders): void {
-    this.commonHeaders = headers;
-  }
   async send(config: RequestOpts) {
     try {
+      const mergedHeaders = { ...this.commonHeaders, ...config.headers };
+
       const result = await super.send({
         ...config,
-        headers: { ...this.commonHeaders, ...config.headers },
+        headers: mergedHeaders,
       });
-      console.log(result, "result===send=AevatarRequest");
       if (result?.data) return result.data;
       // get jwt token
       if (result?.access_token) return result;
       throw result;
     } catch (error) {
-      console.log(error, "error===send=AevatarRequest");
+      // console.log(error, "error===send=AevatarRequest");
+      // biome-ignore lint/complexity/noUselessCatch: <explanation>
       throw error;
     }
+  }
+
+  public setHeaders(headers: HTTPHeaders): void {
+    this.commonHeaders = headers;
   }
 }

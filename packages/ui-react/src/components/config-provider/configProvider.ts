@@ -4,7 +4,7 @@ import { BaseAsyncStorage } from "../../utils/asyncStorage";
 interface IConfigProviderProps extends IConfig {}
 const defaultConfig: IConfigProviderProps = {};
 
-class ConfigProviderInstance {
+export class ConfigProviderInstance {
 	config: IConfigProviderProps;
 	constructor(config: IConfigProviderProps) {
 		this.config = config;

@@ -5,6 +5,8 @@ import svgr from "vite-plugin-svgr";
 import dts from "vite-plugin-dts";
 import tailwindcss from "@tailwindcss/vite";
 import pkg from "./package.json";
+import { vitestConfigObj } from "../../vitest-config";
+import { defineConfig as vitestConfig } from "vitest/config";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -31,5 +33,10 @@ export default defineConfig({
         },
       },
     },
+  },
+  test: {
+    ...vitestConfigObj,
+    environment: "happy-dom",
+    setupFiles: ["./vitest.setup"],
   },
 });

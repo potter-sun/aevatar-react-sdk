@@ -20,10 +20,10 @@ export default function AevatarCardInner({
       <div className="pb-[12px] pt-[16px] pr-[14px] pl-[14px] border-b border-[#303030] border-solid">
         <div className="flex justify-between items-center">
           <div className="flex font-syne text-white text-[15px] font-semibold leading-normal lowercase pb-[9px]">
-            <div>ai basic &nbsp;</div>
-            <div>#1</div>
+            <div>{`${"ai basic"} ${"#1"}`}</div>
           </div>
           <Setting
+            role="img"
             className="cursor-pointer"
             onClick={() => onEditGaevatar(props.id)}
           />

@@ -32,7 +32,8 @@
     "build": "vite build",
     "lint": "biome lint --write .",
     "format": "biome format --write .",
-    "test": "jest"
+    "test": "vitest --coverage",
+    "test:dev": "vitest --watch"
   },
   "dependencies": {
     "@portkey/request": "^2.19.0-alpha.9",
@@ -40,16 +41,13 @@
     "@aevatar-react-sdk/types": "workspace:*"
   },
   "devDependencies": {
-    "@jest/globals": "^29.3.1",
-    "babel-jest": "^29.3.1",
-    "jest": "^29.3.1",
-    "ts-jest": "^29.0.5",
     "vite": "^6.1.0",
-    "vite-plugin-dts": "latest"
+    "vite-plugin-dts": "latest",
+    "@vitest/coverage-v8": "3.0.6",
+    "vitest": "^3.0.6"
   },
   "peerDependencies": {
     "aelf-sdk": "3.4.16-alpha.7",
     "query-string": "^7.1.1"
-  },
-  "gitHead": "5987857c1fc0e12775425f3d876188be78421ca7"
+  }
 }

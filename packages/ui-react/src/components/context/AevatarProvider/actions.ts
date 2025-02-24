@@ -1,7 +1,7 @@
 import type { Theme } from "../../types";
 import { basicActions } from "../utils";
 
-const AevatarActions = {
+export const AevatarActions = {
   setTheme: "SET_THEME",
   destroy: "DESTROY",
 };

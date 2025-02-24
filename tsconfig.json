@@ -22,7 +22,15 @@
     "paths": {
       "@aevatar-react-sdk/ui-react": ["./packages/ui-sdk/src"],
       "@aevatar-react-sdk/core": ["./packages/core/src"]
-    }
+    },
+    "types": [
+      "node",
+      "vitest",
+      "@testing-library/jest-dom",
+      "vite/client",
+      "vitest/globals"
+    ]
   },
-  "include": ["index.d.ts"]
+  "include": ["index.d.ts"],
+  "exclude": ["./dist", "node_modules", "**/*.test.ts", "**/*.test.tsx"]
 }

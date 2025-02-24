@@ -1,4 +1,4 @@
-import AElf from 'aelf-sdk'
+import AElf from "aelf-sdk";
 export const sleep = (time: number) => {
   return new Promise<void>((resolve) => {
     const timeout = setTimeout(() => {
@@ -8,7 +8,7 @@ export const sleep = (time: number) => {
   });
 };
 
-export const pubKeyToAddress = (pubKey) => {
+export const pubKeyToAddress = (pubKey: string) => {
   const onceSHAResult = Buffer.from(
     AElf.utils.sha256(Buffer.from(pubKey, "hex")),
     "hex"
