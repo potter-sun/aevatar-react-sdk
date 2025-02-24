@@ -41,7 +41,6 @@ export class RequestDefaultsConfig {
   }
   setConfig(config?: IRequestDefaults) {
     if (config) {
-      // biome-ignore lint/complexity/noForEach: <explanation>
       Object.entries(config).forEach(([key, value]) => {
         this[key as keyof IRequestDefaults] = value;
       });
@@ -64,7 +63,6 @@ export class AevatarConfig implements IAevatarConfig {
     if (options) this.setConfig(options);
   }
   setConfig(options: IConfig) {
-    // biome-ignore lint/complexity/noForEach: <explanation>
     Object.entries(options).forEach(([key, value]) => {
       if (!value) return;
       switch (key) {
@@ -75,7 +73,6 @@ export class AevatarConfig implements IAevatarConfig {
           this.requestConfig.setConfig(value);
           this.requestDefaults = value;
           const connectRequestDefaults = { ...value };
-          connectRequestDefaults.baseURL = undefined;
           this.connectRequestConfig.setConfig(connectRequestDefaults);
           break;
         }

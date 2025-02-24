@@ -18,13 +18,12 @@ export function useAevatar(): [AevatarState, BasicActions] {
 }
 
 function reducer(state: any, { type, payload }: any) {
+  console.log(payload, type, "textContent====");
   switch (type) {
     case basicAevatarView.destroy.type: {
-      return {};
+      return INITIAL_STATE;
     }
     default: {
-      const { destroy } = payload;
-      if (destroy) return Object.assign({}, payload);
       return Object.assign({}, state, payload);
     }
   }

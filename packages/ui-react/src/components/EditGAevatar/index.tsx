@@ -12,11 +12,13 @@ import { useUpdateEffect } from "react-use";
 export interface IEditGAevatarProps {
   className?: string;
   onBack?: () => void;
+  onSuccess?: () => void;
 }
 
 export default function EditGAevatar({
   className,
   onBack,
+  onSuccess,
 }: IEditGAevatarProps) {
   const [, setShow] = useAtom(loadingAtom);
 
@@ -58,59 +60,59 @@ export default function EditGAevatar({
   useEffect(() => {
     getAllAgentsConfiguration();
     // TODO test
-    sleep(1000).then(() => {
-      setAgentConfiguration({
-        "AevatarTemplate.GAgents.workers/XWorkerGAgentTEST": {
-          agentType: "InvestmentContent",
-          fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
-          agentParams: [
-            {
-              name: "creatorgagent1",
-              type: "System.String",
-            },
-            {
-              name: "InvestmentContent",
-              type: "System.Enum",
-            },
-          ],
-        },
-        XWorkerGAgentSelect: {
-          agentType: "AevatarTemplate.GAgents.workers/XWorkerGAgent1",
-          fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
+    // sleep(1000).then(() => {
+    //   setAgentConfiguration({
+    //     "AevatarTemplate.GAgents.workers/XWorkerGAgentTEST": {
+    //       agentType: "InvestmentContent",
+    //       fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
+    //       agentParams: [
+    //         {
+    //           name: "creatorgagent1",
+    //           type: "System.String",
+    //         },
+    //         {
+    //           name: "InvestmentContent",
+    //           type: "System.Enum",
+    //         },
+    //       ],
+    //     },
+    //     XWorkerGAgentSelect: {
+    //       agentType: "AevatarTemplate.GAgents.workers/XWorkerGAgent1",
+    //       fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
 
-          agentParams: [
-            {
-              name: "InvestmentContent",
-              type: "System.Enum",
-            },
-          ],
-        },
+    //       agentParams: [
+    //         {
+    //           name: "InvestmentContent",
+    //           type: "System.Enum",
+    //         },
+    //       ],
+    //     },
 
-        creatorgagentINput: {
-          agentType: "creatorgagent1",
-          fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
+    //     creatorgagentINput: {
+    //       agentType: "creatorgagent1",
+    //       fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
 
-          agentParams: [
-            {
-              name: "creatorgagent1",
-              type: "System.String",
-            },
-          ],
-        },
+    //       agentParams: [
+    //         {
+    //           name: "creatorgagent1",
+    //           type: "System.String",
+    //         },
+    //       ],
+    //     },
 
-        "AevatarTemplate.GAgents.workers/XWorkerGAgent": {
-          agentType: "AevatarTemplate.GAgents.workers/XWorkerGAgent",
-          fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
+    //     "AevatarTemplate.GAgents.workers/XWorkerGAgent": {
+    //       agentType: "AevatarTemplate.GAgents.workers/XWorkerGAgent",
+    //       fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
 
-          agentParams: null,
-        },
-        creatorgagent: {
-          agentType: "creatorgagent",
-          fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
-          agentParams: null,
-        },
-      });
-    });
+    //       agentParams: null,
+    //     },
+    //     creatorgagent: {
+    //       agentType: "creatorgagent",
+    //       fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
+    //       agentParams: null,
+    //     },
+    //   });
+    // });
   }, [getAllAgentsConfiguration]);
 
   return (
@@ -126,6 +128,7 @@ export default function EditGAevatar({
           configuarationParams={configuarationParams?.agentParams}
           onGagentChange={setAgentType}
           onBack={onBack}
+          onSuccess={onSuccess}
         />
       )}
       <PageLoading />

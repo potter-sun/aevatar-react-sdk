@@ -24,7 +24,6 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
       method: "GET",
       url: "/api/agent",
       params: { guid: id },
-      headers: this._headers,
     });
   }
   updateAgentInfo(
@@ -35,14 +34,12 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
       method: "PUT",
       url: `/api/agent/${id}`,
       params,
-      headers: this._headers,
     });
   }
   deleteAgent(id: string): Promise<void> {
     return this._request.send({
       method: "DELETE",
       url: `/api/agent/${id}`,
-      headers: this._headers,
     });
   }
   addSubAgents(
@@ -53,7 +50,6 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
       method: "POST",
       url: `/api/agent/${id}/add-subagent`,
       params,
-      headers: this._headers,
     });
   }
   removeSubAgents(
@@ -64,36 +60,31 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
       method: "POST",
       url: `/api/agent/${id}/remove-subagent`,
       params,
-      headers: this._headers,
     });
   }
   removeAllSubAgent(id: string): Promise<void> {
     return this._request.send({
       method: "POST",
       url: `/api/agent/${id}/remove-all-subagent`,
-      headers: this._headers,
     });
   }
   getAgentRelationship(id: string): Promise<IAgentRelationship> {
     return this._request.send({
       method: "GET",
       url: `/api/agent/${id}/relationship`,
-      headers: this._headers,
     });
   }
   getAllAgentsConfiguration(): Promise<IAgentsConfiguration[]> {
     return this._request.send({
       method: "GET",
       url: "/api/agent/all-agents",
-      headers: this._headers,
     });
   }
-  getAgents(params: IGetAgentsParams): Promise<IAgentInfo[]> {
+  getAgents(params: IGetAgentsParams): Promise<IAgentInfoDetail[]> {
     return this._request.send({
       method: "GET",
       url: "/api/agent/atomic-agents",
       params,
-      headers: this._headers,
     });
   }
   createAgent(params: ICreateAgentParams): Promise<IAgentInfo> {
@@ -101,7 +92,6 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
       method: "POST",
       url: "/api/agent/agent",
       params,
-      headers: this._headers,
     });
   }
 }

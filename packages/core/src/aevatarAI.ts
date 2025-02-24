@@ -46,9 +46,9 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
       pubkey: params.pubkey,
       signature: params.signature,
       plain_text: params.plain_text,
-      ca_hash: params?.ca_hash || undefined,
-      chain_id: params?.chain_id || undefined,
-      source: params.source || AuthTokenSource.Portkey,
+      ca_hash: params?.ca_hash,
+      chain_id: params?.chain_id,
+      source: params.source,
       client_id: params.client_id,
       grant_type: params.grant_type,
     });
@@ -62,6 +62,7 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
         ? AuthTokenSource.NightElf
         : params.ca_hash;
     const key = frontPartKey + pubKeyToAddress(params.pubkey);
+    console.log(this.config.storageMethod, "aevatarAI===111");
 
     if (!this.config.storageMethod) return undefined;
 

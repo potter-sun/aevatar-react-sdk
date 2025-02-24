@@ -32,7 +32,7 @@ export default function DropzoneItem({
   return (
     <>
       <FormLabel className="flex justify-between items-center">
-        *Knowledge Base
+        {name}
       </FormLabel>
       <Dropzone
         accept={accept}
@@ -47,7 +47,6 @@ export default function DropzoneItem({
           }
         }}
         onDropRejected={(error) => {
-          console.log(error, "error==onDropRejected");
           form.setError(name, {
             message: error[0]?.errors?.[0]?.message ?? "Upload file error",
           });
@@ -60,6 +59,7 @@ export default function DropzoneItem({
               className: cn(
                 "border border-dashed border-[#303030] py-[29px] flex items-center justify-center cursor-pointer"
               ),
+              "data-testid": "dropzone-id",
             })}>
             <input {...getInputProps()} />
             <p className="font-pro text-[10px] text-[#606060] flex flex-col gap-[4px] items-center">
@@ -74,7 +74,9 @@ export default function DropzoneItem({
         {fieldsUpload.map((field, index) => (
           <div key={field.id} className="flex mb-[10px] justify-between">
             <div>
-              <div className="font-pro text-[11px] text-[#B9B9B9]">
+              <div
+                data-testid="field-name-dropzoneItem"
+                className="font-pro text-[11px] text-[#B9B9B9]">
                 {field.name}
               </div>
               <div className="font-pro text-[10px] text-[#606060]">
@@ -83,6 +85,7 @@ export default function DropzoneItem({
             </div>
 
             <MinusIcon
+              role="img"
               className="cursor-pointer"
               onClick={() => remove(index)}
             />

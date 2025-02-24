@@ -1,6 +1,6 @@
 import {
   MyGAevatar,
-  EditGAevatar,
+  CreateGAevatar,
   ConfigProvider,
   aevatarAI,
   EditGAevatarInner,
@@ -16,7 +16,7 @@ const LoginButton = clientOnly(
 const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 
 ConfigProvider.setConfig({
-  // connectUrl: "https://station-staging.aevatar.ai",
+  connectUrl: "https://station-staging.aevatar.ai",
   requestDefaults: {
     // baseURL: "/aevatarURL",
     baseURL: "https://station-developer-staging.aevatar.ai/automatedx-client",
@@ -76,6 +76,7 @@ export default function UI() {
           height={600}
           onNewGAevatar={onNewGAevatar}
           onEditGaevatar={onEditGaevatar}
+          userAddress={""}
         />
       )}
       {stage === Stage.editGAevatar && editAgents && (
@@ -87,7 +88,7 @@ export default function UI() {
           }}
         />
       )}
-      {stage === Stage.newGAevatar && <EditGAevatar className="h-[600px]" />}
+      {stage === Stage.newGAevatar && <CreateGAevatar className="h-[600px]" />}
     </div>
   );
 }

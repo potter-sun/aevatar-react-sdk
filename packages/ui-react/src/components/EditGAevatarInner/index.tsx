@@ -36,6 +36,7 @@ export interface IEditGAevatarProps {
   configuarationParams?: IConfigurationParams[] | null;
   onGagentChange?: (value: string) => void;
   onBack?: () => void;
+  onSuccess?: () => void;
 }
 
 enum FormItemType {
@@ -56,6 +57,7 @@ export default function EditGAevatarInner({
   type = "create",
   onBack,
   onGagentChange,
+  onSuccess,
 }: IEditGAevatarProps) {
   const [btnLoading, setBtnLoading] = useState<
     "saving" | "deleting" | undefined
@@ -76,7 +78,9 @@ export default function EditGAevatarInner({
       text = btnLoading === "saving" ? "saving" : "save";
     }
     return (
-      <div className="flex items-center gap-[8px]">
+      <div
+        data-testid="edit-gaevatar-inner"
+        className="flex items-center gap-[8px]">
         <Button
           key={"save"}
           className="p-[8px] px-[18px] gap-[10px] text-[#fff] hover:text-[#303030]"
@@ -118,7 +122,7 @@ export default function EditGAevatarInner({
   const leftEle = useMemo(() => {
     return (
       <div className="flex items-center gap-[16px]">
-        {onBack && <BackArrow onClick={onBack} />}
+        {onBack && <BackArrow role="img" onClick={onBack} />}
         <span className="hidden sm:inline-block">g-aevatars configuration</span>
         <span className="inline-block sm:hidden">configuration</span>
       </div>
@@ -126,7 +130,6 @@ export default function EditGAevatarInner({
   }, [onBack]);
 
   const form = useForm<any>();
-  console.log(agentName, "agentName==");
   useEffect(() => {
     const agentType = form.getValues("agentType");
     if (!agentType) {
@@ -183,7 +186,6 @@ export default function EditGAevatarInner({
           name: values.agentName,
           properties,
         };
-        console.log(values.agentName, "values.agentName==");
         if (type === "create") {
           await aevatarAI.services.agent.createAgent(params);
         } else {
@@ -191,13 +193,13 @@ export default function EditGAevatarInner({
         }
 
         setBtnLoading(undefined);
-        onBack?.();
+        onSuccess?.();
       } catch (error: any) {
         console.log(error, "error==");
         setBtnLoading(undefined);
       }
     },
-    [form, fieldNames, agentId, type, onBack]
+    [form, fieldNames, agentId, type, onSuccess]
   );
 
   const onAgentTypeChange = useCallback(
@@ -236,16 +238,18 @@ export default function EditGAevatarInner({
                 name="agentType"
                 disabled={agentTypeList.length === 0 || type === "edit"}
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>*Atomic-aevatars Type</FormLabel>
+                  <FormItem aria-labelledby="agentTypeLabel">
+                    <FormLabel id="agentTypeLabel">
+                      *Atomic-aevatars Type
+                    </FormLabel>
                     <Select
-                      value={field.value}
-                      disabled={field.disabled}
+                      value={field?.value}
+                      disabled={field?.disabled}
                       onValueChange={(values) => {
                         onAgentTypeChange(values, field);
                       }}>
                       <FormControl>
-                        <SelectTrigger aria-disabled={field.disabled}>
+                        <SelectTrigger aria-disabled={field?.disabled}>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>
@@ -267,10 +271,17 @@ export default function EditGAevatarInner({
                 defaultValue={agentName}
                 name={"agentName"}
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>*Atomic-Aevatar Name</FormLabel>
+                  <FormItem aria-labelledby="agentNameLabel">
+                    <FormLabel id="agentNameLabel">
+                      *Atomic-Aevatar Name
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Atomic-Aevatar Name" {...field} />
+                      <Input
+                        placeholder="Atomic-Aevatar Name"
+                        {...field}
+                        value={field?.value}
+                        onChange={field?.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -313,11 +324,11 @@ export default function EditGAevatarInner({
                             <FormLabel>{item.name}</FormLabel>
 
                             <Select
-                              value={field.value}
-                              disabled={field.disabled}
+                              value={field?.value}
+                              disabled={field?.disabled}
                               onValueChange={field.onChange}>
                               <FormControl>
-                                <SelectTrigger aria-disabled={field.disabled}>
+                                <SelectTrigger aria-disabled={field?.disabled}>
                                   <SelectValue placeholder="Type" />
                                 </SelectTrigger>
                               </FormControl>

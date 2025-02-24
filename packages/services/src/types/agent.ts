@@ -64,7 +64,7 @@ export interface IAgentsConfiguration {
 
 export interface IAgentService {
   createAgent(params: ICreateAgentParams): Promise<IAgentInfo>;
-  getAgents(params: IGetAgentsParams): Promise<IAgentInfo[]>;
+  getAgents(params: IGetAgentsParams): Promise<IAgentInfoDetail[]>;
   getAgentInfo(id: string): Promise<IAgentInfoDetail>;
   updateAgentInfo(
     id: string,

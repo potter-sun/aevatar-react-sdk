@@ -29,5 +29,5 @@
     "noUncheckedSideEffectImports": true
   },
   "include": ["src", "index.d.ts", "index.ts"],
-  "exclude": ["./dist", "node_modules"]
+  "exclude": ["./dist", "node_modules", "**/*.test.ts", "**/*.test.tsx"]
 }
