@@ -36,6 +36,7 @@ export interface IEditGAevatarProps {
   configuarationParams?: IConfigurationParams[] | null;
   onGagentChange?: (value: string) => void;
   onBack?: () => void;
+  onSuccess?: () => void;
 }
 
 enum FormItemType {
@@ -56,6 +57,7 @@ export default function EditGAevatarInner({
   type = "create",
   onBack,
   onGagentChange,
+  onSuccess,
 }: IEditGAevatarProps) {
   const [btnLoading, setBtnLoading] = useState<
     "saving" | "deleting" | undefined
@@ -191,13 +193,13 @@ export default function EditGAevatarInner({
         }
 
         setBtnLoading(undefined);
-        onBack?.();
+        onSuccess?.();
       } catch (error: any) {
         console.log(error, "error==");
         setBtnLoading(undefined);
       }
     },
-    [form, fieldNames, agentId, type, onBack]
+    [form, fieldNames, agentId, type, onSuccess]
   );
 
   const onAgentTypeChange = useCallback(

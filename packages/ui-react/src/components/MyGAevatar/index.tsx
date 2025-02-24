@@ -17,7 +17,7 @@ export interface IMyGAevatarProps {
   width?: number | string;
   className?: string;
   userAddress: string;
-  maxAgentCount?: number;
+  maxGAevatarCount?: number;
   onNewGAevatar?: () => void;
   onEditGaevatar: (id: string) => void;
 }
@@ -40,7 +40,7 @@ export default function MyGAevatar({
   width,
   className,
   userAddress,
-  maxAgentCount = 999999,
+  maxGAevatarCount = 999999,
   onNewGAevatar,
   onEditGaevatar,
 }: IMyGAevatarProps) {
@@ -87,7 +87,9 @@ export default function MyGAevatar({
       style={{ height, width }}>
       <CommonHeader
         leftEle={"my g-aevatars"}
-        rightEle={gAevatarList && maxAgentCount < gAevatarList.length && newGA}
+        rightEle={
+          gAevatarList && maxGAevatarCount < gAevatarList.length && newGA
+        }
       />
 
       <div

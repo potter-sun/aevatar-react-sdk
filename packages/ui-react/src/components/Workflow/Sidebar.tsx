@@ -1,4 +1,3 @@
-import React from "react";
 import { useDnD } from "./DnDContext";
 
 type NodeType = "input" | "default" | "output";
@@ -8,8 +7,7 @@ const Avatar = ({ onDragStart, name, id }: any) => {
     <div
       className="flex items-center p-4 sdk:bg-black sdk:text-white"
       onDragStart={onDragStart}
-      draggable
-    >
+      draggable>
       <div className="flex flex-col">
         <p className="text-lg font-bold">{name}</p>
         <p className="text-sm ">ID: {id}</p>
@@ -24,13 +22,13 @@ const Sidebar: React.FC = () => {
     event: React.DragEvent<HTMLDivElement>,
     nodeType: NodeType
   ) => {
-    setType(nodeType);
+    setType(nodeType as any);
     event.dataTransfer.effectAllowed = "move";
   };
   const avatarData = {
     name: "eevatar name",
     id: 2,
-    onDragStart: event => onDragStart(event, "default"),
+    onDragStart: (event) => onDragStart(event, "default"),
   };
   return (
     <aside>

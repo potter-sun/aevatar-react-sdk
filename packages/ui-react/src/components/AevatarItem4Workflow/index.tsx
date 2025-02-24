@@ -17,6 +17,7 @@ const agentInfo: IAgentInfoDetail = {
     topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
   },
   grainId: "8c2baec4-3eca-4403-a113-b05942412770",
+  agentGuid: ""
 };
 export default function AevatarItem({ id: nodeId, data }: IProps) {
   const { isNew, onClick, deleteNode } = data;
@@ -37,7 +38,7 @@ export default function AevatarItem({ id: nodeId, data }: IProps) {
         onClick={onClick}
         deleteNode={deleteNode}
         nodeId={nodeId}
-      ></AevatarCardInner>
+      />
       <Handle
         type="source"
         position={Position.Right}

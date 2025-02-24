@@ -136,7 +136,7 @@ export const DnDFlow = ({ onClick }: IProps) => {
             strokeWidth: 2,
           }}
         >
-          {nodes.length === 0 && <Background></Background>}
+          {nodes.length === 0 && <Background />}
           <Controls />
         </ReactFlow>
       </div>

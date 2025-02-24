@@ -12,11 +12,13 @@ import { useUpdateEffect } from "react-use";
 export interface IEditGAevatarProps {
   className?: string;
   onBack?: () => void;
+  onSuccess?: () => void;
 }
 
 export default function EditGAevatar({
   className,
   onBack,
+  onSuccess,
 }: IEditGAevatarProps) {
   const [, setShow] = useAtom(loadingAtom);
 
@@ -126,6 +128,7 @@ export default function EditGAevatar({
           configuarationParams={configuarationParams?.agentParams}
           onGagentChange={setAgentType}
           onBack={onBack}
+          onSuccess={onSuccess}
         />
       )}
       <PageLoading />
