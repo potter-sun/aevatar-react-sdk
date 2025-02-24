@@ -17,7 +17,7 @@
     "dev": "vite build --watch --mode dev",
     "build": "vite build",
     "lint": "biome lint --write .",
-    "test": "vitest run",
+    "test": "vitest --coverage",
     "test:dev": "vitest --watch",
     "format": "biome format --write .",
     "preview": "vite preview"
