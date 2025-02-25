@@ -5,3 +5,4 @@ export * from "./label";
 export * from "./select";
 export * from "./dislog";
 export * from "./toast";
+export * from "./toaster";

@@ -8,7 +8,7 @@ import { cn } from "../../lib/utils";
 const Root: React.ElementType = LabelPrimitive.Root;
 
 const labelVariants = cva(
-  "text-[#b9b9b9] text-xs font-bold font-syne mb-[10px] block leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+  "sdk:text-[#b9b9b9] sdk:text-xs sdk:font-bold sdk:font-syne sdk:mb-[10px] sdk:block sdk:leading-none sdk:peer-disabled:cursor-not-allowed sdk:peer-disabled:opacity-70"
 );
 
 const Label: React.ElementType = React.forwardRef<
