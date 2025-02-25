@@ -3,9 +3,9 @@ import { createContext, useContext, useMemo, useReducer } from "react";
 import { basicAevatarView, type AevatarState } from "./actions";
 import { useEffectOnce } from "react-use";
 import type { BasicActions } from "../utils";
-import type { Theme } from "../../types";
 import { aevatarAI } from "../../../utils";
 import { ConfigProvider } from "../../config-provider";
+import { Toaster } from "../../ui/toaster";
 
 const INITIAL_STATE = {
   theme: "dark",
@@ -30,10 +30,10 @@ function reducer(state: any, { type, payload }: any) {
 }
 
 export interface ProviderProps {
-  theme?: Theme;
+  // theme?: Theme;
   children: React.ReactNode;
 }
-export default function Provider({ theme, children }: ProviderProps) {
+export default function Provider({ children }: ProviderProps) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   useEffectOnce(() => {
     if (aevatarAI.config.storageMethod) {
@@ -48,11 +48,9 @@ export default function Provider({ theme, children }: ProviderProps) {
 
   return (
     <AevatarContext.Provider
-      value={useMemo(
-        () => [{ ...state, theme }, { dispatch }],
-        [state, theme]
-      )}>
+      value={useMemo(() => [{ ...state }, { dispatch }], [state])}>
       {children}
+      <Toaster />
     </AevatarContext.Provider>
   );
 }

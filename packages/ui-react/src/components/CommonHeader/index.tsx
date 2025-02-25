@@ -15,12 +15,12 @@ export default function CommonHeader({
   return (
     <div
       className={clsx(
-        "flex justify-between items-center border border-[#303030]",
-        "pt-[36px] pb-[17px] pl-[20px] pr-[20px]",
-        "md:pl-[40px] md:pr-[40px] md:pb-[24px] md:border-none",
+        "sdk:flex sdk:justify-between sdk:items-center sdk:border sdk:border-[#303030]",
+        "sdk:pt-[36px] sdk:pb-[17px] sdk:pl-[20px] sdk:pr-[20px]",
+        "sdk:md:pl-[40px] sdk:md:pr-[40px] sdk:md:pb-[24px] sdk:md:border-none",
         className
       )}>
-      <div className="text-white font-syne text-[18px] font-semibold lowercase aevatarai-text-gradient">
+      <div className="sdk:text-white sdk:font-syne sdk:text-[18px] sdk:font-semibold sdk:lowercase sdk:aevatarai-text-gradient">
         {leftEle}
       </div>
       {rightEle}

@@ -83,7 +83,7 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
   getAgents(params: IGetAgentsParams): Promise<IAgentInfoDetail[]> {
     return this._request.send({
       method: "GET",
-      url: "/api/agent/atomic-agents",
+      url: "/api/agent/agent-list",
       params,
     });
   }

@@ -5,8 +5,9 @@ import {
   aevatarAI,
   EditGAevatarInner,
   type IConfigurationParams,
+  AevatarProvider,
 } from "@aevatar-react-sdk/ui-react";
-import "@aevatar-react-sdk/ui-react/ui-react.css";
+// import "@aevatar-react-sdk/ui-react/ui-react.css";
 import { useCallback, useState } from "react";
 import { clientOnly } from "vike-react/clientOnly";
 const LoginButton = clientOnly(
@@ -16,7 +17,7 @@ const LoginButton = clientOnly(
 const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 
 ConfigProvider.setConfig({
-  connectUrl: "https://station-staging.aevatar.ai",
+  connectUrl: "https://auth-station-staging.aevatar.ai",
   requestDefaults: {
     // baseURL: "/aevatarURL",
     baseURL: "https://station-developer-staging.aevatar.ai/automatedx-client",
@@ -30,7 +31,7 @@ enum Stage {
 }
 
 export default function UI() {
-  const [stage, setStage] = useState<Stage>(Stage.myGAevatar);
+  const [stage, setStage] = useState<Stage>();
   const onNewGAevatar = useCallback(() => {
     console.log("onNewGAevatar");
     setStage(Stage.newGAevatar);
@@ -63,32 +64,39 @@ export default function UI() {
 
     setStage(Stage.editGAevatar);
   }, []);
+
+  const onAuthFinish = useCallback(() => {
+    setStage(Stage.myGAevatar);
+  }, []);
   return (
     <div>
-      <LoginButton />
+      <AevatarProvider>
+        <LoginButton />
 
-      <AuthButton />
+        <AuthButton onFinish={onAuthFinish} />
 
-      <div className="text-[12px] lg:text-[24px]">aad</div>
+        <div className="text-[12px] lg:text-[24px]">aad</div>
 
-      {stage === Stage.myGAevatar && (
-        <MyGAevatar
-          height={600}
-          onNewGAevatar={onNewGAevatar}
-          onEditGaevatar={onEditGaevatar}
-          userAddress={""}
-        />
-      )}
-      {stage === Stage.editGAevatar && editAgents && (
-        <EditGAevatarInner
-          type="edit"
-          {...editAgents}
-          onBack={() => {
-            setStage(Stage.myGAevatar);
-          }}
-        />
-      )}
-      {stage === Stage.newGAevatar && <CreateGAevatar className="h-[600px]" />}
+        {stage === Stage.myGAevatar && (
+          <MyGAevatar
+            height={600}
+            onNewGAevatar={onNewGAevatar}
+            onEditGaevatar={onEditGaevatar}
+          />
+        )}
+        {stage === Stage.editGAevatar && editAgents && (
+          <EditGAevatarInner
+            type="edit"
+            {...editAgents}
+            onBack={() => {
+              setStage(Stage.myGAevatar);
+            }}
+          />
+        )}
+        {stage === Stage.newGAevatar && (
+          <CreateGAevatar className="h-[600px]" />
+        )}
+      </AevatarProvider>
     </div>
   );
 }

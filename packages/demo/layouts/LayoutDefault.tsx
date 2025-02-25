@@ -1,6 +1,7 @@
 import "./style.css";
 
 import "./tailwind.css";
+import "@aevatar-react-sdk/ui-react/ui-react.css";
 
 import { clientOnly } from "vike-react/clientOnly";
 

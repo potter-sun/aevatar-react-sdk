@@ -12,53 +12,51 @@ import { sleep } from "@aevatar-react-sdk/utils";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import CommonHeader from "../CommonHeader";
 import { aevatarAI } from "../../utils";
+import { useToast } from "../../hooks/use-toast";
+import { handleErrorMessage } from "../../utils/error";
+
 export interface IMyGAevatarProps {
   height?: number | string;
   width?: number | string;
   className?: string;
-  userAddress: string;
   maxGAevatarCount?: number;
   onNewGAevatar?: () => void;
   onEditGaevatar: (id: string) => void;
 }
 
-// const agentInfo: IAgentInfoDetail = {
-//   id: "e087d0d6-ec86-4b4e-8bf1-a4c616fbffdf",
-//   agentType: "AI Basic",
-//   name: "Agent Name",
-//   properties: {
-//     modelProvider: "gpt",
-//     bio: "this is a lively and adorable physicist",
-//     topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
-//   },
-//   grainId: "8c2baec4-3eca-4403-a113-b05942412770",
-//   agentGuid: "",
-// };
-
 export default function MyGAevatar({
   height = "100vh",
   width,
   className,
-  userAddress,
   maxGAevatarCount = 999999,
   onNewGAevatar,
   onEditGaevatar,
 }: IMyGAevatarProps) {
   const [, setShow] = useAtom(loadingAtom);
   const [gAevatarList, setGAevatarList] = useState<IAgentInfoDetail[]>();
+  const { toast } = useToast();
 
   const getGAevatarList = useCallback(async () => {
     setShow(true);
-    // await sleep(2000);
-    // setGAevatarList(new Array(10).fill("").map(() => agentInfo));
-    const list = await aevatarAI.services.agent.getAgents({
-      userAddress,
-      pageIndex: 0,
-      pageSize: 100,
-    });
-    setGAevatarList(list);
-    setShow(false);
-  }, [setShow, userAddress]);
+
+    try {
+      const list = await aevatarAI.services.agent.getAgents({
+        pageIndex: 0,
+        pageSize: 100,
+      });
+      setGAevatarList(list);
+      setShow(false);
+    } catch (error) {
+      toast({
+        title: "error",
+        description: handleErrorMessage(error, "Something went wrong."),
+        duration: 99999999999,
+      });
+      setShow(false);
+
+      console.log(error, "getGAevatarList==error");
+    }
+  }, [setShow, toast]);
 
   useEffect(() => {
     getGAevatarList();
@@ -67,10 +65,10 @@ export default function MyGAevatar({
   const newGA = useMemo(
     () => (
       <Button
-        className="p-[8px] px-[18px] gap-[10px] text-[#fff] hover:text-[#303030]"
+        className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
         onClick={onNewGAevatar}>
         <AddIcon style={{ width: 14, height: 14 }} />
-        <span className="text-center font-syne text-[12px] font-semibold lowercase leading-[14px]">
+        <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
           new g-aevatar
         </span>
       </Button>
@@ -81,7 +79,7 @@ export default function MyGAevatar({
   return (
     <div
       className={clsx(
-        "relative bg-black flex flex-col aevatarai-gaevatar-list-wrapper",
+        "sdk:relative sdk:bg-black sdk:flex sdk:flex-col aevatarai-gaevatar-list-wrapper",
         className
       )}
       style={{ height, width }}>
@@ -94,11 +92,11 @@ export default function MyGAevatar({
 
       <div
         className={clsx(
-          "overflow-auto flex-1",
-          !gAevatarList && "flex justify-center items-center"
+          "sdk:overflow-auto sdk:flex-1",
+          !gAevatarList && "sdk:flex sdk:justify-center sdk:items-center"
         )}>
         {(!gAevatarList || gAevatarList?.length === 0) && (
-          <div className="flex flex-col justify-center items-center gap-[20px]">
+          <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:items-center sdk:gap-[20px]">
             <EmptyIcon role="img" data-testid="empty-icon" id="empty-icon" />
             {newGA}
           </div>
@@ -106,9 +104,9 @@ export default function MyGAevatar({
         {gAevatarList && (
           <div
             className={clsx(
-              "grid grid-cols-1 place-items-center pt-[23px] gap-[20px]",
-              "md:grid-cols-3 md:max-w-[762px] md:pt-[0] mx-auto",
-              "aevatarai-gaevatar-list"
+              "sdk:grid sdk:grid-cols-1 sdk:place-items-center sdk:pt-[23px] sdk:gap-[20px]",
+              "sdk:md:grid-cols-3 sdk:md:max-w-[762px] sdk:md:pt-[0] sdk:mx-auto",
+              "sdk:aevatarai-gaevatar-list"
             )}>
             {gAevatarList.map((gAevatar, index) => (
               <AevatarCard
