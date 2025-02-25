@@ -18,7 +18,6 @@ export interface IAgentInfoDetail extends IAgentInfo {
 }
 
 export interface IGetAgentsParams {
-  userAddress: string;
   pageIndex: number;
   pageSize: number;
 }

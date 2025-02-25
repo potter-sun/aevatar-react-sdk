@@ -69,6 +69,7 @@ export default function EditGAevatarInner({
     onBack?.();
   }, [onBack]);
 
+
   const rightEle = useMemo(() => {
     let text = "create";
     if (type === "create") {
@@ -79,38 +80,38 @@ export default function EditGAevatarInner({
     return (
       <div
         data-testid="edit-gaevatar-inner"
-        className="flex items-center gap-[8px]">
+        className="sdk:flex sdk:items-center sdk:gap-[8px]">
         <Button
           key={"save"}
-          className="p-[8px] px-[18px] gap-[10px] text-[#fff] hover:text-[#303030]"
+          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
           type="submit">
           <Loading
             className={clsx(
               "aevatarai-loading-icon",
-              btnLoading !== "saving" && "hidden"
+              btnLoading !== "saving" && "sdk:hidden"
             )}
             style={{ width: 14, height: 14 }}
           />
-          <span className="text-center font-syne text-[12px] font-semibold lowercase leading-[14px]">
+          <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
             {text}
           </span>
         </Button>
         <Button
           key={"delete"}
           className={clsx(
-            "p-[8px] px-[18px] gap-[10px] text-[#fff] hover:text-[#303030]",
-            type === "create" && "hidden"
+            "sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]",
+            type === "create" && "sdk:hidden"
           )}
           onClick={onDelete}>
           <Loading
             key={"delete"}
             className={clsx(
               "aevatarai-loading-icon",
-              btnLoading !== "deleting" && "hidden"
+              btnLoading !== "deleting" && "sdk:hidden"
             )}
             style={{ width: 14, height: 14 }}
           />
-          <span className="text-center font-syne text-[12px] font-semibold lowercase leading-[14px]">
+          <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
             delete
           </span>
         </Button>
@@ -120,10 +121,12 @@ export default function EditGAevatarInner({
 
   const leftEle = useMemo(() => {
     return (
-      <div className="flex items-center gap-[16px]">
+      <div className="sdk:flex sdk:items-center sdk:gap-[16px]">
         {onBack && <BackArrow role="img" onClick={onBack} />}
-        <span className="hidden sm:inline-block">g-aevatars configuration</span>
-        <span className="inline-block sm:hidden">configuration</span>
+        <span className="sdk:hidden sdk:sm:inline-block">
+          g-aevatars configuration
+        </span>
+        <span className="sdk:inline-block sdk:sm:hidden">configuration</span>
       </div>
     );
   }, [onBack]);
@@ -212,7 +215,7 @@ export default function EditGAevatarInner({
   return (
     <div
       className={clsx(
-        "relative bg-black aevatarai-edit-gaevatar-wrapper",
+        "sdk:relative sdk:bg-black aevatarai-edit-gaevatar-wrapper",
         className
       )}>
       <Form {...form}>
@@ -220,18 +223,18 @@ export default function EditGAevatarInner({
           <CommonHeader leftEle={leftEle} rightEle={rightEle} />
           <div
             className={clsx(
-              "max-w-[352px] sdk:m-auto bg-[#141415] pt-[22px] pb-[14px]",
-              "md:max-w-[361px] md:pt-[0]"
+              "sdk:max-w-[352px] sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
+              "sdk:md:max-w-[361px] sdk:md:pt-[0]"
             )}>
-            <div className="flex flex-col justify-center gap-[2px] p-[8px] px-[10px] bg-white self-stretch">
-              <div className="text-black font-syne text-sm font-semibold leading-normal lowercase">
+            <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
+              <div className="sdk:text-black sdk:font-syne sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
                 settings
               </div>
-              <div className="text-[#606060] font-mono text-[11px] font-normal leading-normal lowercase">
+              <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
                 Manage your aevatar settings and preferences
               </div>
             </div>
-            <div className="flex flex-col gap-y-[22px] p-[16px_16px_6px_16px] items-start content-start self-stretch">
+            <div className="sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
               <FormField
                 control={form.control}
                 name="agentType"

@@ -5,12 +5,13 @@ import { loadingAtom } from "../../state/atoms";
 export default function PageLoading() {
   const [show] = useAtom(loadingAtom);
   if (!show) return null;
+
   return (
     <div
       data-testid="page-loading"
-      className="flex items-center justify-center w-full h-full bg-black absolute top-0 left-0 z-50">
-      <div className="flex text-2xl font-bold text-gray-800 flex items-center">
-        <div className="text-white font-syne text-lg font-semibold leading-normal lowercase">
+      className="sdk:flex sdk:items-center sdk:justify-center sdk:w-full sdk:h-full sdk:bg-black sdk:absolute sdk:top-0 sdk:left-0 sdk:z-50">
+      <div className="sdk:flex sdk:text-2xl sdk:font-bold sdk:text-gray-800 sdk:flex sdk:items-center">
+        <div className="sdk:text-white sdk:font-syne sdk:text-lg sdk:font-semibold sdk:leading-normal sdk:lowercase">
           Scanning......
         </div>
         <ReactLoading type="bars" color="rgba(255, 255, 255, 0.20)" />
