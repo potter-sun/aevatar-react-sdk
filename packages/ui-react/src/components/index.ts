@@ -10,3 +10,4 @@ export * from "./config-provider";
 export * from "./context";
 export * from "./ui";
 export * from "./types";
+import "../index.css";
