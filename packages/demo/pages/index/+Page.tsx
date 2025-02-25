@@ -1,10 +1,5 @@
 import { clientOnly } from "vike-react/clientOnly";
-import {
-  MyButton,
-  ConfigProvider,
-  aevatarAI,
-  Workflow,
-} from "@aevatar-react-sdk/ui-react";
+import { ConfigProvider, aevatarAI } from "@aevatar-react-sdk/ui-react";
 import "@aevatar-react-sdk/ui-react/ui-react.css";
 import { useCallback } from "react";
 
@@ -52,8 +47,6 @@ export default function Page() {
         <div className="lg:hidden mt-8">
           <LoginButton />
         </div>
-
-        <MyButton />
       </div>
       <AuthButton />
 

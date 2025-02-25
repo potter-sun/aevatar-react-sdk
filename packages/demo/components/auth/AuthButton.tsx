@@ -8,7 +8,7 @@ import { aevatarAI } from "@aevatar-react-sdk/ui-react";
 const plainTextOrigin = `Hello and welcome! Click "Sign" to begin exploring the aevatar dashboard. Rest assured, this action won't trigger any blockchain transactions or incur gas fees.
 Nonce: ${Date.now()}`;
 
-export default function AuthButton() {
+export default function AuthButton({ onFinish }: { onFinish: () => void }) {
   const { walletInfo, walletType, getSignature } = useConnectWallet();
   console.log(walletInfo, "walletInfo==");
   const onGetAuthToken = useCallback(async () => {
@@ -85,6 +85,7 @@ export default function AuthButton() {
       try {
         const result = await aevatarAI.getAuthToken(apiData);
         console.log(result, "getAuthToken===");
+        onFinish();
       } catch (error) {
         console.log(error, "getAuthToken==error=");
       }
@@ -92,7 +93,7 @@ export default function AuthButton() {
       // getHomePageList
       // const result = await
     }
-  }, [walletType, walletInfo, getSignature]);
+  }, [walletType, walletInfo, getSignature, onFinish]);
   const getList = useCallback(async () => {
     const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
 
