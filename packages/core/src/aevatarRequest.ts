@@ -26,8 +26,7 @@ export class AevatarRequest extends FetchRequest implements IAevatarRequest {
       if (result?.access_token) return result;
       throw result;
     } catch (error) {
-      // console.log(error, "error===send=AevatarRequest");
-      // biome-ignore lint/complexity/noUselessCatch: <explanation>
+      console.log(error, "error===send=AevatarRequest");
       throw error;
     }
   }

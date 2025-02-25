@@ -31,7 +31,7 @@ export default function DropzoneItem({
 
   return (
     <>
-      <FormLabel className="flex justify-between items-center">
+      <FormLabel className="sdk:flex sdk:justify-between sdk:items-center">
         {name}
       </FormLabel>
       <Dropzone
@@ -57,12 +57,12 @@ export default function DropzoneItem({
           <div
             {...getRootProps({
               className: cn(
-                "border border-dashed border-[#303030] py-[29px] flex items-center justify-center cursor-pointer"
+                "sdk:border sdk:border-dashed sdk:border-[#303030] sdk:py-[29px] sdk:flex sdk:items-center sdk:justify-center sdk:cursor-pointer"
               ),
               "data-testid": "dropzone-id",
             })}>
             <input {...getInputProps()} />
-            <p className="font-pro text-[10px] text-[#606060] flex flex-col gap-[4px] items-center">
+            <p className="sdk:font-pro sdk:text-[10px] sdk:text-[#606060] sdk:flex sdk:flex-col sdk:gap-[4px] sdk:items-center">
               <UploadIcon />
               <div>Click to upload (PDF)</div>
             </p>
@@ -72,21 +72,23 @@ export default function DropzoneItem({
       <FormMessage />
       <div>
         {fieldsUpload.map((field, index) => (
-          <div key={field.id} className="flex mb-[10px] justify-between">
+          <div
+            key={field.id}
+            className="sdk:flex sdk:mb-[10px] sdk:justify-between">
             <div>
               <div
                 data-testid="field-name-dropzoneItem"
-                className="font-pro text-[11px] text-[#B9B9B9]">
+                className="sdk:font-pro sdk:text-[11px] sdk:text-[#B9B9B9]">
                 {field.name}
               </div>
-              <div className="font-pro text-[10px] text-[#606060]">
+              <div className="sdk:font-pro sdk:text-[10px] sdk:text-[#606060]">
                 {field.content?.size && `${field.content?.size} bytes`}
               </div>
             </div>
 
             <MinusIcon
               role="img"
-              className="cursor-pointer"
+              className="sdk:cursor-pointer"
               onClick={() => remove(index)}
             />
           </div>
