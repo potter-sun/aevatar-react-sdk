@@ -1,0 +1,15 @@
+# @aevatar-react-sdk/ui-react
+
+## 1.0.0
+
+### Major Changes
+
+- 3e83795: test export&publish
+
+### Patch Changes
+
+- Updated dependencies [3e83795]
+  - @aevatar-react-sdk/services@1.1.0
+  - @aevatar-react-sdk/types@1.1.0
+  - @aevatar-react-sdk/utils@1.1.0
+  - @aevatar-react-sdk/core@1.1.0
