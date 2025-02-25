@@ -1,7 +1,7 @@
 {
   "name": "@aevatar-react-sdk/ui-react",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
@@ -13,6 +13,9 @@
     },
     "./ui-react.css": "./dist/ui-react.css"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite build --watch --mode dev",
     "build": "vite build",
@@ -20,7 +23,8 @@
     "test": "vitest --coverage",
     "test:dev": "vitest --watch",
     "format": "biome format --write .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
