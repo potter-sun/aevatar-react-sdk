@@ -33,7 +33,8 @@
     "lint": "biome lint --write .",
     "format": "biome format --write .",
     "test": "vitest --coverage",
-    "test:dev": "vitest --watch"
+    "test:dev": "vitest --watch",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@portkey/request": "^2.19.0-alpha.9",

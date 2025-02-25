@@ -33,7 +33,8 @@
     "test": "vitest --coverage",
     "test:dev": "vitest --watch",
     "lint": "biome lint --write .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@aevatar-react-sdk/services": "workspace:*",
