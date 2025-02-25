@@ -59,7 +59,7 @@ export default function EditGAevatar({
 
   useEffect(() => {
     getAllAgentsConfiguration();
-    // TODO test
+    // // TODO test
     // sleep(1000).then(() => {
     //   setAgentConfiguration({
     //     "AevatarTemplate.GAgents.workers/XWorkerGAgentTEST": {

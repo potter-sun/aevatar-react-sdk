@@ -6,6 +6,7 @@ import { imagetools } from "vite-imagetools";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
 import tailwindcss from "@tailwindcss/vite";
+// import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig((config) => ({
   plugins: [
@@ -15,6 +16,7 @@ export default defineConfig((config) => ({
     svgr(),
     imagetools(),
     tailwindcss(),
+    // mkcert(),
   ],
 
   resolve: {
@@ -36,11 +38,11 @@ export default defineConfig((config) => ({
         changeOrigin: true,
         secure: false,
       },
-      "/aevatarURL/api": {
-        target: "https://station-staging.aevatar.ai",
+      "/automatedx-client": {
+        target: "https://station-developer-staging.aevatar.ai",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/aevatarURL\/api/, "/api"),
+        // rewrite: (path) => path.replace(/^\/aevatarURL\/api/, "/api"),
       },
     },
   },

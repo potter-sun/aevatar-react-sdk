@@ -62,7 +62,6 @@ export default function EditGAevatarInner({
   const [btnLoading, setBtnLoading] = useState<
     "saving" | "deleting" | undefined
   >();
-
   const onDelete = useCallback(async () => {
     setBtnLoading("deleting");
     await sleep(2000);
@@ -221,7 +220,7 @@ export default function EditGAevatarInner({
           <CommonHeader leftEle={leftEle} rightEle={rightEle} />
           <div
             className={clsx(
-              "max-w-[352px] m-auto bg-[#141415] pt-[22px] pb-[14px]",
+              "max-w-[352px] sdk:m-auto bg-[#141415] pt-[22px] pb-[14px]",
               "md:max-w-[361px] md:pt-[0]"
             )}>
             <div className="flex flex-col justify-center gap-[2px] p-[8px] px-[10px] bg-white self-stretch">
