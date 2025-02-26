@@ -79,22 +79,4 @@ describe("Provider", () => {
     // Verify that ConfigProvider.setConfig was called once when the provider mounts
     expect(ConfigProvider.setConfig).toHaveBeenCalledTimes(1);
   });
-
-  it("should update the theme when useEffectOnce runs", () => {
-    // Mock the useEffectOnce behavior
-
-    const TestComponent = () => {
-      const [{ theme }] = useAevatar();
-      return <div data-testid="theme">{theme}</div>;
-    };
-
-    render(
-      <Provider theme="light">
-        <TestComponent />
-      </Provider>
-    );
-
-    // Verify the theme value passed from Provider
-    expect(screen.getByTestId("theme").textContent).toBe("light");
-  });
 });

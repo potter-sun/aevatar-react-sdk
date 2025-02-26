@@ -8,6 +8,8 @@ import PageLoading from "../PageLoading";
 import { useAtom } from "jotai";
 import { loadingAtom } from "../../state/atoms";
 import { useUpdateEffect } from "react-use";
+import { useToast } from "../../hooks/use-toast";
+import { handleErrorMessage } from "../../utils/error";
 
 export interface IEditGAevatarProps {
   className?: string;
@@ -21,19 +23,28 @@ export default function EditGAevatar({
   onSuccess,
 }: IEditGAevatarProps) {
   const [, setShow] = useAtom(loadingAtom);
+  const { toast } = useToast();
 
   const [agentConfiguration, setAgentConfiguration] =
     useState<Record<string, IAgentsConfiguration["agentParams"]>>();
 
   const getAllAgentsConfiguration = useCallback(async () => {
-    const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
-    if (!result) return;
-    const configuration: any = {};
-    result.forEach((item) => {
-      configuration[item.agentType] = item.agentParams;
-    });
-    setAgentConfiguration(configuration);
-  }, []);
+    try {
+      const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
+      if (!result) return;
+      const configuration: any = {};
+      result.forEach((item) => {
+        configuration[item.agentType] = item.agentParams;
+      });
+      setAgentConfiguration(configuration);
+    } catch (error) {
+      toast({
+        title: "error",
+        description: handleErrorMessage(error, "Something went wrong."),
+        duration: 3000,
+      });
+    }
+  }, [toast]);
 
   const agentTypeList = useMemo(
     () => Object.keys(agentConfiguration ?? {}),

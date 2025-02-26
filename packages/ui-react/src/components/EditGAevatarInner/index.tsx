@@ -25,6 +25,10 @@ import Loading from "../../assets/svg/loading.svg?react";
 
 import { aevatarAI } from "../../utils";
 import type { IConfigurationParams } from "../types";
+import { useToast } from "../../hooks/use-toast";
+import { handleErrorMessage } from "../../utils/error";
+
+export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
 export interface IEditGAevatarProps {
   className?: string;
@@ -36,7 +40,7 @@ export interface IEditGAevatarProps {
   configuarationParams?: IConfigurationParams[] | null;
   onGagentChange?: (value: string) => void;
   onBack?: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (type: TEditGaevatarSuccessType) => void;
 }
 
 enum FormItemType {
@@ -62,13 +66,27 @@ export default function EditGAevatarInner({
   const [btnLoading, setBtnLoading] = useState<
     "saving" | "deleting" | undefined
   >();
+
+  const { toast } = useToast();
+
   const onDelete = useCallback(async () => {
     setBtnLoading("deleting");
-    await sleep(2000);
+    try {
+      const result = await aevatarAI.services.agent.deleteAgent(agentId);
+      console.log(result, "result===");
+      // TODO There will be some delay in cqrs
+      await sleep(2000);
+      onSuccess?.("delete");
+    } catch (error) {
+      console.error("deleteAgent:", error);
+      toast({
+        title: "error",
+        description: handleErrorMessage(error, "Something went wrong."),
+        duration: 3000,
+      });
+    }
     setBtnLoading(undefined);
-    onBack?.();
-  }, [onBack]);
-
+  }, [onSuccess, toast, agentId]);
 
   const rightEle = useMemo(() => {
     let text = "create";
@@ -122,7 +140,9 @@ export default function EditGAevatarInner({
   const leftEle = useMemo(() => {
     return (
       <div className="sdk:flex sdk:items-center sdk:gap-[16px]">
-        {onBack && <BackArrow role="img" onClick={onBack} />}
+        {onBack && (
+          <BackArrow role="img" className="cursor-pointer" onClick={onBack} />
+        )}
         <span className="sdk:hidden sdk:sm:inline-block">
           g-aevatars configuration
         </span>
@@ -147,36 +167,51 @@ export default function EditGAevatarInner({
     btnLoadingRef.current = btnLoading;
   }, [btnLoading]);
 
-  const fieldNames = useMemo(
-    () => configuarationParams?.map((item) => item.name),
-    [configuarationParams]
-  );
-
   const onSubmit = useCallback(
     async (values: any) => {
       console.log(values, "values=onSubmit");
       try {
         if (btnLoadingRef.current) return;
-        const errorFields = [];
+        const errorFields: { name: string; error: string }[] = [];
         const paramsList = [];
-        fieldNames?.forEach((item) => {
-          if (!values[item]) errorFields.push(item);
-          else paramsList.push({ [item]: values[item] });
+        configuarationParams?.forEach((item) => {
+          const isNumberType =
+            item.type === FormItemType.Int32 ||
+            item.type === FormItemType.Int64;
+          const isTypeError = isNumberType
+            ? Number.isNaN(Number(values[item.name]))
+            : false;
+
+          if (!values[item.name]) {
+            errorFields.push({
+              name: item.name,
+              error: "required",
+            });
+          } else if (isTypeError) {
+            errorFields.push({
+              name: item.name,
+              error: "Please enter a number",
+            });
+          } else {
+            paramsList.push({ [item.name]: values[item.name] });
+          }
         });
 
         if (!values?.agentName) {
-          errorFields.push("agentName");
+          errorFields.push({ name: "agentName", error: "required" });
         }
 
-        if (fieldNames && fieldNames.length > 0 && errorFields.length > 0) {
+        if (
+          configuarationParams &&
+          configuarationParams.length > 0 &&
+          errorFields.length > 0
+        ) {
           errorFields.forEach((item) => {
-            form.setError(item, { message: "required" });
+            form.setError(item.name, { message: item.error });
           });
           return;
         }
         setBtnLoading("saving");
-
-        console.log(Object.values(paramsList), paramsList, "paramsList===");
 
         const properties = paramsList.reduce((acc: any, curr) => {
           // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
@@ -194,14 +229,21 @@ export default function EditGAevatarInner({
           await aevatarAI.services.agent.updateAgentInfo(agentId, params);
         }
 
+        // TODO There will be some delay in cqrs
+        await sleep(2000);
+
         setBtnLoading(undefined);
-        onSuccess?.();
+        onSuccess?.(type);
       } catch (error: any) {
-        console.log(error, "error==");
+        toast({
+          title: "error",
+          description: handleErrorMessage(error, "Something went wrong."),
+          duration: 3000,
+        });
         setBtnLoading(undefined);
       }
     },
-    [form, fieldNames, agentId, type, onSuccess]
+    [form, configuarationParams, agentId, type, toast, onSuccess]
   );
 
   const onAgentTypeChange = useCallback(

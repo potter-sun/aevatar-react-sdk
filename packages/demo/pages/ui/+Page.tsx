@@ -50,6 +50,7 @@ export default function UI() {
     const agentTypeList = [result.agentType];
     const configuarationParams: IConfigurationParams[] = Object.entries(
       result.properties ?? {}
+      
     ).map((item) => ({
       name: item[0],
       type: "System.String",
@@ -91,10 +92,21 @@ export default function UI() {
             onBack={() => {
               setStage(Stage.myGAevatar);
             }}
+            onSuccess={() => {
+              setStage(Stage.myGAevatar);
+            }}
           />
         )}
         {stage === Stage.newGAevatar && (
-          <CreateGAevatar className="h-[600px]" />
+          <CreateGAevatar
+            className="h-[600px]"
+            onBack={() => {
+              setStage(Stage.myGAevatar);
+            }}
+            onSuccess={() => {
+              setStage(Stage.myGAevatar);
+            }}
+          />
         )}
       </AevatarProvider>
     </div>
