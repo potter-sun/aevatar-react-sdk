@@ -42,7 +42,7 @@ export default function MyGAevatar({
     try {
       const list = await aevatarAI.services.agent.getAgents({
         pageIndex: 0,
-        pageSize: 100,
+        pageSize: 999,
       });
       setGAevatarList(list);
       setShow(false);

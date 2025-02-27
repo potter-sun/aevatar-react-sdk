@@ -50,7 +50,6 @@ export default function UI() {
     const agentTypeList = [result.agentType];
     const configuarationParams: IConfigurationParams[] = Object.entries(
       result.properties ?? {}
-      
     ).map((item) => ({
       name: item[0],
       type: "System.String",
@@ -69,6 +68,7 @@ export default function UI() {
   const onAuthFinish = useCallback(() => {
     setStage(Stage.myGAevatar);
   }, []);
+
   return (
     <div>
       <AevatarProvider>
@@ -81,6 +81,7 @@ export default function UI() {
         {stage === Stage.myGAevatar && (
           <MyGAevatar
             height={600}
+            maxGAevatarCount={1}
             onNewGAevatar={onNewGAevatar}
             onEditGaevatar={onEditGaevatar}
           />
@@ -88,6 +89,7 @@ export default function UI() {
         {stage === Stage.editGAevatar && editAgents && (
           <EditGAevatarInner
             type="edit"
+            className="h-[600px]"
             {...editAgents}
             onBack={() => {
               setStage(Stage.myGAevatar);

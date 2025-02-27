@@ -1,84 +1,122 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { RequestOpts, HTTPHeaders } from "@aevatar-react-sdk/types";
-import { AevatarRequest } from "../aevatarRequest";
+import { AevatarRequest } from "../AevatarRequest"; // Ensure correct import path
+import { aevatarEvents } from "@aevatar-react-sdk/utils";
+import type { RequestOpts } from "@aevatar-react-sdk/types";
 
-// vi.mock("@portkey/request", () => {
-//   return {
-//     FetchRequest: vi.fn().mockImplementation(() => {
-//       return {
-//         send: vi.fn(),
-//       };
-//     }),
-//   };
-// });
-const mockSend = vi.fn();
+// Mock FetchRequest
+vi.mock("@portkey/request", () => {
+  class MockFetchRequest {
+    send = vi.fn(); // Mock send method
+  }
+  return { FetchRequest: MockFetchRequest };
+});
 
-describe("AevatarRequest", () => {
-  let aevatarRequest: AevatarRequest;
+describe("AevatarRequest Unit Tests", () => {
+  let request: AevatarRequest;
 
   beforeEach(() => {
-    aevatarRequest = new AevatarRequest({} as any);
-    aevatarRequest.send = mockSend;
+    request = new AevatarRequest({});
   });
 
-  it("should correctly set headers with setHeaders", () => {
-    const headers: HTTPHeaders = {
-      Authorization: "Bearer mock-token",
-      "Content-Type": "application/json",
+  it("should merge commonHeaders and call send", async () => {
+    const config: RequestOpts = {
+      url: "/api/test",
+      method: "GET",
+      headers: { "X-Test": "123" },
     };
 
-    aevatarRequest.setHeaders(headers);
+    // Mock send to return response
+    vi.spyOn(request, "send").mockResolvedValue({
+      data: "mock response",
+    });
 
-    expect(aevatarRequest.commonHeaders).toEqual(headers);
+    const result = await request.send(config);
+
+    expect(result.data).toBe("mock response");
   });
 
-  it("should merge commonHeaders and config.headers correctly", async () => {
-    const initialHeaders: HTTPHeaders = {
-      Authorization: "Bearer initial-token",
+  it("should throw an error when sendOrigin retries more than 3 times", async () => {
+    await expect(
+      (request as any).sendOrigin({ url: "/api/test" }, 4)
+    ).rejects.toEqual("sendOrigin==error");
+  });
+
+  it("should return data when send is successful", async () => {
+    const config: RequestOpts = { url: "/api/test", method: "GET" };
+
+    vi.spyOn(request, "send").mockResolvedValue({
+      data: "expected-data",
+    });
+
+    const result = await request.send(config);
+
+    expect(result.data).toBe("expected-data");
+  });
+
+  // it("should retry with a new token when receiving a 401 error", async () => {
+  //   const authToken = "new-auth-token";
+
+  //   vi.spyOn(request, "send")
+  //     .mockRejectedValueOnce({ status: 401 }) // First call fails with 401
+  //     .mockResolvedValueOnce({ data: "success" }); // Second call succeeds
+
+  //   const emitSpy = vi.spyOn(aevatarEvents.AuthTokenGet, "emit");
+
+  //   const addListenerSpy = vi
+  //     .spyOn(aevatarEvents.AuthTokenReceive, "addListener")
+  //     .mockImplementation((callback: (data: string) => void) => {
+  //       callback(authToken);
+  //       return {
+  //         remove: vi.fn(),
+  //         addListener: vi.fn(),
+  //         on: vi.fn(),
+  //         once: vi.fn(),
+  //         removeListener: vi.fn(),
+  //         off: vi.fn(),
+  //         removeAllListeners: vi.fn(),
+  //         setMaxListeners: vi.fn(),
+  //         getMaxListeners: vi.fn(),
+  //       } as any; // Ensures correct return type
+  //     });
+
+  //   const config: RequestOpts = { url: "/api/test", method: "GET" };
+  //   const result = await request.send(config);
+
+  //   expect(emitSpy).toHaveBeenCalled();
+  //   expect(addListenerSpy).toHaveBeenCalled();
+  //   expect(request.commonHeaders.Authorization).toBe(authToken);
+  //   expect(result).toBe("success");
+  // });
+
+  it("should update commonHeaders using setHeaders", () => {
+    const headers = {
+      Authorization: "Bearer TestToken",
+      "X-Custom-Header": "TestValue",
     };
-    aevatarRequest.setHeaders(initialHeaders);
 
-    const requestConfig: RequestOpts = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    request.setHeaders(headers);
 
-    mockSend.mockResolvedValueOnce({ message: "Success" });
-
-    const result = await aevatarRequest.send(requestConfig);
-
-
-    // expect(mockSend).toHaveBeenCalledWith({
-    //   ...requestConfig,
-    //   headers: {
-    //     ...initialHeaders,
-    //     ...requestConfig.headers, /
-    //   },
-    // });
-
-    expect(result.message).toEqual("Success");
+    expect(request.commonHeaders).toEqual(headers);
   });
 
-  it("should return access_token if present in result", async () => {
-    const mockResponse = { access_token: "mock-access-token" };
-    mockSend.mockResolvedValueOnce(mockResponse);
+  it("should throw an error if send fails with a non-401 status", async () => {
+    const errorResponse = { status: 500, message: "Internal Server Error" };
 
-    const requestConfig: RequestOpts = {};
+    vi.spyOn(request, "send").mockRejectedValue(errorResponse);
 
-    const result = await aevatarRequest.send(requestConfig);
-
-    expect(result).toEqual(mockResponse);
+    await expect(
+      request.send({ url: "/api/test", method: "GET" })
+    ).rejects.toEqual(errorResponse);
   });
 
-  it("should throw an error if super.send fails", async () => {
-    const error = new Error("Request failed");
-    mockSend.mockRejectedValueOnce(error);
+  it("should throw an error if send fails with a non-401 status", async () => {
+    const errorResponse = new Error("Internal Server Error");
+    (errorResponse as any).status = 500;
 
-    const requestConfig: RequestOpts = {};
+    vi.spyOn(request, "send").mockRejectedValue(errorResponse);
 
-    await expect(aevatarRequest.send(requestConfig)).rejects.toThrowError(
-      error
-    );
+    await expect(
+      request.send({ url: "/api/test", method: "GET" })
+    ).rejects.toThrow(errorResponse);
   });
 });

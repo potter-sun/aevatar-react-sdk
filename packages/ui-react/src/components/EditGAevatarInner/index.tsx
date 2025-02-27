@@ -67,9 +67,16 @@ export default function EditGAevatarInner({
     "saving" | "deleting" | undefined
   >();
 
+  const btnLoadingRef = useRef(btnLoading);
+  useEffect(() => {
+    btnLoadingRef.current = btnLoading;
+  }, [btnLoading]);
+
   const { toast } = useToast();
 
   const onDelete = useCallback(async () => {
+    if (btnLoadingRef.current) return;
+
     setBtnLoading("deleting");
     try {
       const result = await aevatarAI.services.agent.deleteAgent(agentId);
@@ -103,13 +110,13 @@ export default function EditGAevatarInner({
           key={"save"}
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
           type="submit">
-          <Loading
-            className={clsx(
-              "aevatarai-loading-icon",
-              btnLoading !== "saving" && "sdk:hidden"
-            )}
-            style={{ width: 14, height: 14 }}
-          />
+          {btnLoading === "saving" && (
+            <Loading
+              key={"save"}
+              className={clsx("aevatarai-loading-icon")}
+              style={{ width: 14, height: 14 }}
+            />
+          )}
           <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
             {text}
           </span>
@@ -121,14 +128,13 @@ export default function EditGAevatarInner({
             type === "create" && "sdk:hidden"
           )}
           onClick={onDelete}>
-          <Loading
-            key={"delete"}
-            className={clsx(
-              "aevatarai-loading-icon",
-              btnLoading !== "deleting" && "sdk:hidden"
-            )}
-            style={{ width: 14, height: 14 }}
-          />
+          {btnLoading === "deleting" && (
+            <Loading
+              key={"delete"}
+              className={clsx("aevatarai-loading-icon")}
+              style={{ width: 14, height: 14 }}
+            />
+          )}
           <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
             delete
           </span>
@@ -161,11 +167,6 @@ export default function EditGAevatarInner({
       form.setValue("agentName", agentName);
     }
   }, [defaultAgentType, agentTypeList, agentName, form]);
-
-  const btnLoadingRef = useRef(btnLoading);
-  useEffect(() => {
-    btnLoadingRef.current = btnLoading;
-  }, [btnLoading]);
 
   const onSubmit = useCallback(
     async (values: any) => {
@@ -200,12 +201,8 @@ export default function EditGAevatarInner({
         if (!values?.agentName) {
           errorFields.push({ name: "agentName", error: "required" });
         }
-
-        if (
-          configuarationParams &&
-          configuarationParams.length > 0 &&
-          errorFields.length > 0
-        ) {
+        console.log(values?.agentName, errorFields, "values?.agentName===");
+        if (errorFields.length > 0) {
           errorFields.forEach((item) => {
             form.setError(item.name, { message: item.error });
           });

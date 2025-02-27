@@ -14,7 +14,7 @@ export class AevatarRequest extends FetchRequest implements IAevatarRequest {
   commonHeaders: HTTPHeaders = {};
   private getAuthTokenPending = false;
 
-  async sendOrigin(config: RequestOpts, count = 0) {
+  private async sendOrigin(config: RequestOpts, count = 0) {
     if (count > 3) throw "sendOrigin==error";
     const mergedHeaders = { ...this.commonHeaders, ...config.headers };
 

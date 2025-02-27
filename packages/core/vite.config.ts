@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import { resolve, isAbsolute } from "node:path";
 import { defineConfig as vitestConfig } from "vitest/config";
-
+import { vitestConfigObj } from "../../vitest-config";
 import pkg from "./package.json";
 
 // https://vite.dev/config/
@@ -33,11 +33,5 @@ export default defineConfig({
       },
     },
   },
-  test: {
-    globals: true,
-    environment: "node",
-    coverage: {
-      provider: "v8",
-    },
-  },
+  test: vitestConfigObj,
 });
