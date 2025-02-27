@@ -7,10 +7,10 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       <input
         type={type}
         className={cn(
-          "flex h-10 w-full text-[12px] text-white font-pro border border-[#303030] bg-background px-[18px] py-[10px] ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-[#606060] placeholder:text-[12px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          "sdk:flex sdk:h-10 sdk:w-full sdk:text-[12px] sdk:text-white sdk:font-pro sdk:border sdk:border-[#303030] sdk:bg-background sdk:px-[18px] sdk:py-[10px] sdk:ring-offset-background sdk:file:border-0 sdk:file:bg-transparent sdk:file:text-sm sdk:file:font-medium sdk:file:text-foreground sdk:placeholder:text-[#606060] sdk:placeholder:text-[12px] sdk:focus-visible:outline-none sdk:focus-visible:ring-1 sdk:focus-visible:ring-ring sdk:disabled:cursor-not-allowed sdk:disabled:opacity-50",
           className,
           {
-            "border-destructive": props["aria-invalid"],
+            "sdk:border-destructive": props["aria-invalid"],
           }
         )}
         ref={ref}

@@ -42,7 +42,7 @@ export default function MyGAevatar({
     try {
       const list = await aevatarAI.services.agent.getAgents({
         pageIndex: 0,
-        pageSize: 100,
+        pageSize: 999,
       });
       setGAevatarList(list);
       setShow(false);
@@ -50,7 +50,7 @@ export default function MyGAevatar({
       toast({
         title: "error",
         description: handleErrorMessage(error, "Something went wrong."),
-        duration: 99999999999,
+        duration: 3000,
       });
       setShow(false);
 
@@ -86,7 +86,7 @@ export default function MyGAevatar({
       <CommonHeader
         leftEle={"my g-aevatars"}
         rightEle={
-          gAevatarList && maxGAevatarCount < gAevatarList.length && newGA
+          gAevatarList && maxGAevatarCount >= gAevatarList.length && newGA
         }
       />
 
@@ -108,7 +108,7 @@ export default function MyGAevatar({
               "sdk:md:grid-cols-3 sdk:md:max-w-[762px] sdk:md:pt-[0] sdk:mx-auto",
               "sdk:aevatarai-gaevatar-list"
             )}>
-            {gAevatarList.map((gAevatar, index) => (
+            {gAevatarList?.map((gAevatar, index) => (
               <AevatarCard
                 agentInfo={gAevatar}
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>

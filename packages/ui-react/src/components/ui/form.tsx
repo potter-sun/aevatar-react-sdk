@@ -83,7 +83,7 @@ const FormItem = React.forwardRef<
     <FormItemContext.Provider value={{ id }}>
       <div
         ref={ref}
-        className={cn("space-y-2", "w-full", className)}
+        className={cn("sdk:space-y-2", "sdk:w-full", className)}
         {...props}
       />
     </FormItemContext.Provider>
@@ -104,8 +104,8 @@ const FormLabel = React.forwardRef<
       htmlFor={formItemId}
       {...props}
       className={clsx(
-        "text-[#B9B9B9] text-[12px] font-semibold lowercase self-stretch font-syne",
-        error && "text-[#FF2E2E]",
+        "sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:self-stretch sdk:font-syne",
+        error && "sdk:text-[#FF2E2E]",
         className
       )}>
       {children}
@@ -132,7 +132,9 @@ const FormControl = React.forwardRef<
       }
       aria-invalid={!!error}
       {...props}>
-      <div className={clsx(error && "border border-[#FF2E2E]")}>{children}</div>
+      <div className={clsx(error && "sdk:border sdk:border-[#FF2E2E]")}>
+        {children}
+      </div>
     </Slot>
   );
 });
@@ -148,7 +150,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("sdk:text-sm sdk:text-muted-foreground", className)}
       {...props}
     />
   );
@@ -171,7 +173,7 @@ const FormMessage = React.forwardRef<
       ref={ref}
       id={formMessageId}
       className={cn(
-        "text-[12px] font-pro text-destructive text-[#FF2E2E]",
+        "sdk:text-[12px] sdk:font-pro sdk:text-destructive sdk:text-[#FF2E2E]",
         className
       )}
       {...props}>

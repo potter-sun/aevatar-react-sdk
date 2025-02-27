@@ -22,8 +22,7 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
   getAgentInfo(id: string): Promise<IAgentInfoDetail> {
     return this._request.send({
       method: "GET",
-      url: "/api/agent",
-      params: { guid: id },
+      url: `/api/agent/${id}`,
     });
   }
   updateAgentInfo(
@@ -77,7 +76,7 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
   getAllAgentsConfiguration(): Promise<IAgentsConfiguration[]> {
     return this._request.send({
       method: "GET",
-      url: "/api/agent/all-agents",
+      url: "/api/agent/agent-type-info-list",
     });
   }
   getAgents(params: IGetAgentsParams): Promise<IAgentInfoDetail[]> {
@@ -90,7 +89,7 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
   createAgent(params: ICreateAgentParams): Promise<IAgentInfo> {
     return this._request.send({
       method: "POST",
-      url: "/api/agent/agent",
+      url: "/api/agent",
       params,
     });
   }

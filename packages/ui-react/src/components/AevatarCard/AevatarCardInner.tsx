@@ -1,6 +1,6 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import Setting from "../../assets/svg/setting.svg?react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 export interface IAevatarCardInnerProps {
   className?: string;
@@ -9,9 +9,21 @@ export interface IAevatarCardInnerProps {
 
 export default function AevatarCardInner({
   className,
+  properties,
   onEditGaevatar,
   ...props
 }: IAevatarCardInnerProps & IAgentInfoDetail) {
+  const propertiesInfo = useMemo(() => {
+    let _properties: Record<string, string[] | string>;
+    try {
+      _properties = JSON.parse(properties as any);
+      // biome-ignore lint/correctness/noUnusedVariables: <explanation>
+    } catch (error) {
+      _properties = properties;
+    }
+    return Object.entries(_properties);
+  }, [properties]);
+
   const propertiesValue = useCallback((value: string | string[]) => {
     if (Array.isArray(value)) return value;
     return [value];
@@ -22,7 +34,7 @@ export default function AevatarCardInner({
       <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[#303030] sdk:border-solid">
         <div className="sdk:flex sdk:justify-between sdk:items-center">
           <div className="sdk:flex sdk:font-syne sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:pb-[9px]">
-            <div>{`${"ai basic"} ${"#1"}`}</div>
+            <div>{`${props.name}`}</div>
           </div>
           <Setting
             role="img"
@@ -30,12 +42,12 @@ export default function AevatarCardInner({
             onClick={() => onEditGaevatar(props.id)}
           />
         </div>
-        <div className="sdk:font-mono sdk:text-[#B9B9B9] sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
-          id: {1}
-        </div>
+        {/* <div className="sdk:font-mono sdk:text-[#B9B9B9] sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
+          id: {props.id}
+        </div> */}
       </div>
       <div className="sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
-        {Object.entries(props.properties).map((item) => (
+        {propertiesInfo.map((item) => (
           <div key={item[0]}>
             <div className="sdk:text-[#606060] sdk:text-[11px] sdk:pb-[10px]">
               {item[0]}

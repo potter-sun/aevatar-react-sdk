@@ -2,7 +2,9 @@
 import { aevatarAI } from "../../utils";
 import type { IConfig } from "@aevatar-react-sdk/types";
 import { BaseAsyncStorage } from "../../utils/asyncStorage";
-interface IConfigProviderProps extends IConfig {}
+interface IConfigProviderProps extends IConfig {
+  getAevatarAuthToken?: () => Promise<string>;
+}
 const defaultConfig: IConfigProviderProps = {};
 
 export class ConfigProviderInstance {

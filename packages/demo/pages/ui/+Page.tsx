@@ -68,6 +68,7 @@ export default function UI() {
   const onAuthFinish = useCallback(() => {
     setStage(Stage.myGAevatar);
   }, []);
+
   return (
     <div>
       <AevatarProvider>
@@ -80,6 +81,7 @@ export default function UI() {
         {stage === Stage.myGAevatar && (
           <MyGAevatar
             height={600}
+            maxGAevatarCount={1}
             onNewGAevatar={onNewGAevatar}
             onEditGaevatar={onEditGaevatar}
           />
@@ -87,14 +89,26 @@ export default function UI() {
         {stage === Stage.editGAevatar && editAgents && (
           <EditGAevatarInner
             type="edit"
+            className="h-[600px]"
             {...editAgents}
             onBack={() => {
+              setStage(Stage.myGAevatar);
+            }}
+            onSuccess={() => {
               setStage(Stage.myGAevatar);
             }}
           />
         )}
         {stage === Stage.newGAevatar && (
-          <CreateGAevatar className="h-[600px]" />
+          <CreateGAevatar
+            className="h-[600px]"
+            onBack={() => {
+              setStage(Stage.myGAevatar);
+            }}
+            onSuccess={() => {
+              setStage(Stage.myGAevatar);
+            }}
+          />
         )}
       </AevatarProvider>
     </div>

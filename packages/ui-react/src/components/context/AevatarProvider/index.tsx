@@ -1,11 +1,18 @@
 import type React from "react";
-import { createContext, useContext, useMemo, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 import { basicAevatarView, type AevatarState } from "./actions";
 import { useEffectOnce } from "react-use";
 import type { BasicActions } from "../utils";
 import { aevatarAI } from "../../../utils";
 import { ConfigProvider } from "../../config-provider";
 import { Toaster } from "../../ui/toaster";
+import { aevatarEvents } from "@aevatar-react-sdk/utils";
 
 const INITIAL_STATE = {
   theme: "dark",
@@ -40,6 +47,14 @@ export default function Provider({ children }: ProviderProps) {
       ConfigProvider.setConfig({});
     }
   });
+
+  useEffect(() => {
+    aevatarEvents.AuthTokenGet.addListener(async () => {
+      console.log(" aevatarEvents.AuthTokenGet.addListener===");
+      const token = await ConfigProvider.config?.getAevatarAuthToken?.();
+      aevatarEvents.AuthTokenReceive.emit(token);
+    });
+  }, []);
 
   // useEffect(() => {
   //   console.log("setGlobalConfig1", theme);

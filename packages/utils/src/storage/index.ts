@@ -10,7 +10,7 @@ export const getAevatarJWT = async (storage: IStorageSuite, key: string) => {
     const data = JSON.parse(jwtData) as { [key: string]: TAevatarJWTData };
     const cData = data[key];
     if (!cData || !cData?.expiresTime) return;
-    if (Date.now() + 0.5 * Day > cData?.expiresTime) return;
+    if (Date.now() + 0.2 * Day > cData?.expiresTime) return;
     return cData;
   // biome-ignore lint/correctness/noUnusedVariables: <explanation>
   } catch (error) {
@@ -29,7 +29,7 @@ export const setAevatarJWT = (
 ) => {
   const jwtData: TAevatarJWTData = {
     ...data,
-    expiresTime: Date.now() + (Number(data.expires_in) - 20),
+    expiresTime: Date.now() + (Number(data.expires_in) - 20) * 1000,
   };
   return storage.setItem(
     LocalStorageKey.AEVATAR_AI_ACCESS_TOKEN,
