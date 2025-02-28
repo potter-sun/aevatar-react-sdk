@@ -2,8 +2,6 @@ import clsx from "clsx";
 import EditGAevatarInner from "../EditGAevatarInner";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { aevatarAI } from "../../utils";
-import type { IAgentsConfiguration } from "@aevatar-react-sdk/services";
-import { sleep } from "@aevatar-react-sdk/utils";
 import PageLoading from "../PageLoading";
 import { useAtom } from "jotai";
 import { loadingAtom } from "../../state/atoms";
@@ -26,7 +24,7 @@ export default function EditGAevatar({
   const { toast } = useToast();
 
   const [agentConfiguration, setAgentConfiguration] =
-    useState<Record<string, IAgentsConfiguration["agentParams"]>>();
+    useState<Record<string, string>>();
 
   const getAllAgentsConfiguration = useCallback(async () => {
     try {
@@ -34,7 +32,7 @@ export default function EditGAevatar({
       if (!result) return;
       const configuration: any = {};
       result.forEach((item) => {
-        configuration[item.agentType] = item.agentParams;
+        configuration[item.agentType] = item.propertyJsonSchema;
       });
       setAgentConfiguration(configuration);
     } catch (error) {
@@ -53,14 +51,7 @@ export default function EditGAevatar({
 
   const [agentType, setAgentType] = useState<string>();
 
-  const configuarationParams = useMemo(() => {
-    console.log(
-      agentConfiguration,
-      agentType,
-      agentConfiguration?.[agentType ?? agentTypeList[0]],
-      "agentConfiguration==="
-    );
-
+  const jsonSchemaString = useMemo(() => {
     return agentConfiguration?.[agentType ?? agentTypeList[0]];
   }, [agentConfiguration, agentType, agentTypeList]);
 
@@ -79,7 +70,7 @@ export default function EditGAevatar({
     getAllAgentsConfiguration();
   }, [getAllAgentsConfiguration]);
 
-  console.log(configuarationParams, "configuarationParams?.agentParams==");
+  console.log(jsonSchemaString, "configuarationParams?.agentParams==");
 
   return (
     <div
@@ -91,7 +82,7 @@ export default function EditGAevatar({
         <EditGAevatarInner
           defaultAgentType={agentType}
           agentTypeList={agentTypeList}
-          configuarationParams={configuarationParams}
+          jsonSchemaString={jsonSchemaString}
           onGagentChange={setAgentType}
           onBack={onBack}
           onSuccess={onSuccess}

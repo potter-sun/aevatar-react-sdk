@@ -36,16 +36,47 @@ export default function MyGAevatar({
   const [gAevatarList, setGAevatarList] = useState<IAgentInfoDetail[]>();
   const { toast } = useToast();
 
+  const fetchAllList = useCallback(async () => {
+    let pageIndex = 0;
+    let allData: any[] = [];
+    let currentPageData: any[] = [];
+
+    while (true) {
+      try {
+        currentPageData = await aevatarAI.services.agent.getAgents({
+          pageIndex,
+          pageSize: 10,
+        });
+      } catch (error) {
+        toast({
+          title: "error",
+          description: handleErrorMessage(error, "Something went wrong."),
+          duration: 3000,
+        });
+        setShow(false);
+        break;
+      }
+
+      if (pageIndex === 0) {
+        setShow(false);
+      }
+      if (currentPageData.length === 0) {
+        break;
+      }
+
+      allData = [...allData, ...currentPageData];
+      setGAevatarList(allData);
+      pageIndex++;
+    }
+
+    return allData;
+  }, [setShow, toast]);
+
   const getGAevatarList = useCallback(async () => {
     setShow(true);
 
     try {
-      const list = await aevatarAI.services.agent.getAgents({
-        pageIndex: 0,
-        pageSize: 999,
-      });
-      setGAevatarList(list);
-      setShow(false);
+      await fetchAllList();
     } catch (error) {
       toast({
         title: "error",
@@ -56,7 +87,7 @@ export default function MyGAevatar({
 
       console.log(error, "getGAevatarList==error");
     }
-  }, [setShow, toast]);
+  }, [setShow, toast, fetchAllList]);
 
   useEffect(() => {
     getGAevatarList();

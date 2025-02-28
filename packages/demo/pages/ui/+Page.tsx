@@ -4,7 +4,6 @@ import {
   ConfigProvider,
   aevatarAI,
   EditGAevatarInner,
-  type IConfigurationParams,
   AevatarProvider,
 } from "@aevatar-react-sdk/ui-react";
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
@@ -20,7 +19,7 @@ ConfigProvider.setConfig({
   connectUrl: "https://auth-station-staging.aevatar.ai",
   requestDefaults: {
     // baseURL: "/aevatarURL",
-    baseURL: "https://station-developer-staging.aevatar.ai/automatedx-client",
+    baseURL: "https://station-staging.aevatar.ai",
   },
 });
 
@@ -39,7 +38,8 @@ export default function UI() {
 
   const [editAgents, setEditAgents] = useState<{
     agentTypeList: string[];
-    configuarationParams: IConfigurationParams[] | null;
+    jsonSchemaString?: string;
+    properties?: Record<string, string>;
     agentName: string;
     agentId: string;
   }>();
@@ -48,18 +48,13 @@ export default function UI() {
     const result = await aevatarAI.services.agent.getAgentInfo(id);
     console.log(result, "result===onEditGaevatar");
     const agentTypeList = [result.agentType];
-    const configuarationParams: IConfigurationParams[] = Object.entries(
-      result.properties ?? {}
-    ).map((item) => ({
-      name: item[0],
-      type: "System.String",
-      value: item[1],
-    }));
+
     setEditAgents({
       agentId: result.id,
       agentTypeList,
-      configuarationParams,
+      jsonSchemaString: result?.propertyJsonSchema,
       agentName: result.name,
+      properties: result.properties,
     });
 
     setStage(Stage.editGAevatar);
@@ -81,7 +76,7 @@ export default function UI() {
         {stage === Stage.myGAevatar && (
           <MyGAevatar
             height={600}
-            maxGAevatarCount={1}
+            // maxGAevatarCount={1}
             onNewGAevatar={onNewGAevatar}
             onEditGaevatar={onEditGaevatar}
           />

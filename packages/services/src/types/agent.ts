@@ -15,6 +15,7 @@ export interface IAgentInfo {
 
 export interface IAgentInfoDetail extends IAgentInfo {
   grainId: string;
+  propertyJsonSchema?: string;
 }
 
 export interface IGetAgentsParams {
@@ -58,7 +59,8 @@ export interface IAgentParams {
 export interface IAgentsConfiguration {
   agentType: string;
   fullName: string;
-  agentParams: null | IAgentParams[];
+  agentParams?: IAgentParams[];
+  propertyJsonSchema?: string;
 }
 
 export interface IAgentService {

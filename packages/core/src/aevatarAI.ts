@@ -62,7 +62,6 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
         ? AuthTokenSource.NightElf
         : params.ca_hash;
     const key = frontPartKey + pubKeyToAddress(params.pubkey);
-    console.log(this.config.storageMethod, "aevatarAI===111");
 
     if (!this.config.storageMethod) return undefined;
 
