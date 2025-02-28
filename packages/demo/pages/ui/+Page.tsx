@@ -19,7 +19,7 @@ ConfigProvider.setConfig({
   connectUrl: "https://auth-station-staging.aevatar.ai",
   requestDefaults: {
     // baseURL: "/aevatarURL",
-    baseURL: "https://station-staging.aevatar.ai",
+    baseURL: "https://station-developer-staging.aevatar.ai/test-client",
   },
 });
 

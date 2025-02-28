@@ -46,13 +46,13 @@ export interface IEditGAevatarProps {
 
 export default function EditGAevatarInner({
   className,
-  defaultAgentType,
+  type = "create",
   agentName,
   agentId,
   agentTypeList,
+  defaultAgentType,
   properties,
   jsonSchemaString,
-  type = "create",
   onBack,
   onGagentChange,
   onSuccess,
