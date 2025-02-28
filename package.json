@@ -1,6 +1,7 @@
 {
   "name": "aevatar-react-sdk",
-  "version": "1.0.0",
+  "private": true,
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +9,12 @@
     "test:update": "vitest -u",
     "test:coverage": "vitest --coverage",
     "test:ci": "vitest --coverage",
-    "build": "pnpm run --if-present --recursive build"
+    "build": "pnpm run --if-present --recursive build",
+    "publish:alpha-enter": "pnpm changeset pre enter alpha",
+    "publish:changeset": "pnpm changeset",
+    "publish:change-version": "pnpm changeset version",
+    "publish:alpha": "pnpm publish -r --tag alpha",
+    "publish:alpha-exit": "pnpm changeset pre exit"
   },
   "keywords": [],
   "author": "",
