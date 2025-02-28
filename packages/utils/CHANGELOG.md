@@ -1,5 +1,38 @@
 # @aevatar-react-sdk/utils
 
+## 0.2.0-alpha.1
+
+### Minor Changes
+
+- 33ed8fb: test
+
+### Patch Changes
+
+- Updated dependencies [33ed8fb]
+  - @aevatar-react-sdk/types@0.2.0-alpha.1
+
+## 0.2.0-alpha.0
+
+### Minor Changes
+
+- cebc3dd: publish alpha
+
+### Patch Changes
+
+- Updated dependencies [cebc3dd]
+  - @aevatar-react-sdk/types@0.2.0-alpha.0
+
+## 0.1.0
+
+### Minor Changes
+
+- a13bc37: frist publish
+
+### Patch Changes
+
+- Updated dependencies [a13bc37]
+  - @aevatar-react-sdk/types@0.1.0
+
 ## 1.1.0
 
 ### Minor Changes
