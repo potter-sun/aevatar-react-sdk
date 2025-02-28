@@ -11,7 +11,7 @@ Nonce: ${Date.now()}`;
 export const useAuthToken = () => {
   const { walletInfo, walletType, getSignature } = useConnectWallet();
   return useCallback(async () => {
-    console.log(walletType, "walletType==");
+
     if (
       walletType === WalletTypeEnum.discover ||
       walletType === WalletTypeEnum.web
