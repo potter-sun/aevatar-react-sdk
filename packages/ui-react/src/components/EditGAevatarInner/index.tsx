@@ -24,7 +24,7 @@ import { sleep } from "@aevatar-react-sdk/utils";
 import Loading from "../../assets/svg/loading.svg?react";
 
 import { aevatarAI } from "../../utils";
-import type { IConfigurationParams } from "../types";
+import type { JSONSchemaType } from "../types";
 import { useToast } from "../../hooks/use-toast";
 import { handleErrorMessage } from "../../utils/error";
 
@@ -37,18 +37,11 @@ export interface IEditGAevatarProps {
   agentId?: string;
   agentTypeList: string[];
   defaultAgentType?: string;
-  configuarationParams?: IConfigurationParams[] | null;
+  jsonSchemaString?: string;
+  properties?: Record<string, string>;
   onGagentChange?: (value: string) => void;
   onBack?: () => void;
   onSuccess?: (type: TEditGaevatarSuccessType) => void;
-}
-
-enum FormItemType {
-  String = "System.String",
-  Int32 = "System.Int32",
-  Int64 = "System.Int64",
-  Select = "System.Enum",
-  IFormFile = "System.IFormFile",
 }
 
 export default function EditGAevatarInner({
@@ -57,7 +50,8 @@ export default function EditGAevatarInner({
   agentName,
   agentId,
   agentTypeList,
-  configuarationParams,
+  properties,
+  jsonSchemaString,
   type = "create",
   onBack,
   onGagentChange,
@@ -157,6 +151,23 @@ export default function EditGAevatarInner({
     );
   }, [onBack]);
 
+  const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
+    const jsonSchema = JSON.parse(jsonSchemaString ?? "{}");
+
+    console.log(jsonSchema, "jsonSchema===JSONSchemaProperties");
+    const _properties = jsonSchema?.properties;
+    if (!_properties) return [];
+
+    return Object.entries(_properties).map((item) => {
+      const name = item[0];
+      const propertyInfo = item[1] as JSONSchemaType<any>;
+      propertyInfo.value = properties?.[name];
+      return [item[0], propertyInfo];
+    });
+  }, [jsonSchemaString, properties]);
+
+  console.log(JSONSchemaProperties, "JSONSchemaProperties===");
+
   const form = useForm<any>();
   useEffect(() => {
     const agentType = form.getValues("agentType");
@@ -175,26 +186,29 @@ export default function EditGAevatarInner({
         if (btnLoadingRef.current) return;
         const errorFields: { name: string; error: string }[] = [];
         const paramsList = [];
-        configuarationParams?.forEach((item) => {
+        JSONSchemaProperties?.forEach((item) => {
+          const name = item[0];
+          const propertyInfo = item[1];
+          const type = propertyInfo.type;
           const isNumberType =
-            item.type === FormItemType.Int32 ||
-            item.type === FormItemType.Int64;
+            type.includes("number") || type.includes("integer");
+
           const isTypeError = isNumberType
-            ? Number.isNaN(Number(values[item.name]))
+            ? Number.isNaN(Number(values[name]))
             : false;
 
-          if (!values[item.name]) {
+          if (!values[name]) {
             errorFields.push({
-              name: item.name,
+              name: name,
               error: "required",
             });
           } else if (isTypeError) {
             errorFields.push({
-              name: item.name,
+              name: name,
               error: "Please enter a number",
             });
           } else {
-            paramsList.push({ [item.name]: values[item.name] });
+            paramsList.push({ [name]: values[name] });
           }
         });
 
@@ -218,7 +232,7 @@ export default function EditGAevatarInner({
         const params = {
           agentType: values.agentType,
           name: values.agentName,
-          properties,
+          properties: properties,
         };
         if (type === "create") {
           await aevatarAI.services.agent.createAgent(params);
@@ -240,7 +254,7 @@ export default function EditGAevatarInner({
         setBtnLoading(undefined);
       }
     },
-    [form, configuarationParams, agentId, type, toast, onSuccess]
+    [form, agentId, type, JSONSchemaProperties, toast, onSuccess]
   );
 
   const onAgentTypeChange = useCallback(
@@ -254,7 +268,7 @@ export default function EditGAevatarInner({
   return (
     <div
       className={clsx(
-        "sdk:relative sdk:bg-black aevatarai-edit-gaevatar-wrapper",
+        "sdk:relative sdk:bg-black sdk:overflow-auto aevatarai-edit-gaevatar-wrapper",
         className
       )}>
       <Form {...form}>
@@ -328,89 +342,97 @@ export default function EditGAevatarInner({
                   </FormItem>
                 )}
               />
-              {configuarationParams?.map((item, index) => {
-                switch (item.type) {
-                  case FormItemType.String:
-                  case FormItemType.Int32:
-                  case FormItemType.Int64:
-                    return (
-                      <FormField
-                        key={`${item.name}-${index}`}
-                        control={form.control}
-                        defaultValue={item.value}
-                        name={item.name}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{item.name}</FormLabel>
-                            <FormControl>
-                              <Input
-                                // placeholder="Atomic-Aevatar Name"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    );
-                  case FormItemType.Select:
-                    return (
-                      <FormField
-                        key={`${item.name}-${index}`}
-                        control={form.control}
-                        defaultValue={item.value}
-                        name={item.name}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{item.name}</FormLabel>
+              {JSONSchemaProperties?.map((item, index) => {
+                const name = item[0];
+                const propertyInfo = item[1];
 
-                            <Select
-                              value={field?.value}
-                              disabled={field?.disabled}
-                              onValueChange={field.onChange}>
-                              <FormControl>
-                                <SelectTrigger aria-disabled={field?.disabled}>
-                                  <SelectValue placeholder="Type" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value={"AIBasic"}>
-                                  AI-Basic
-                                </SelectItem>
-                                <SelectItem value={"Telegram"}>
-                                  Telegram Messaging
-                                </SelectItem>
-                                <SelectItem value={"Twitter"}>
-                                  Twitter Messaging
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    );
-                  case FormItemType.IFormFile:
-                    return (
-                      <FormField
-                        key={`${item.name}-${index}`}
-                        control={form.control}
-                        defaultValue={item.value}
-                        name={item.name}
-                        render={() => (
-                          <FormItem>
-                            <FormControl>
-                              <DropzoneItem
-                                form={form}
-                                name={"knowledgeBase"}
-                                accept={{ "application/pdf": [] }}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    );
+                let type = propertyInfo.type;
+                if (typeof propertyInfo.type === "string")
+                  type = [propertyInfo.type];
+                const value = item[1]?.value;
+                const key = `${name}-${index}`;
+
+                if (propertyInfo.enum) {
+                  <FormField
+                    key={key}
+                    control={form.control}
+                    defaultValue={value}
+                    name={name}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{name}</FormLabel>
+
+                        <Select
+                          value={field?.value}
+                          disabled={field?.disabled}
+                          onValueChange={field.onChange}>
+                          <FormControl>
+                            <SelectTrigger aria-disabled={field?.disabled}>
+                              <SelectValue placeholder="Type" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            {propertyInfo.enum.map((enumValue) => (
+                              <SelectItem key={enumValue} value={enumValue}>
+                                {enumValue}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />;
                 }
+                if (
+                  type.includes("string") ||
+                  type.includes("number") ||
+                  type.includes("integer")
+                ) {
+                  return (
+                    <FormField
+                      key={key}
+                      control={form.control}
+                      defaultValue={value}
+                      name={name}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{name}</FormLabel>
+                          <FormControl>
+                            <Input
+                              // placeholder="Atomic-Aevatar Name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  );
+                }
+
+                // if (type.includes("file") || type.includes("object")) {
+                //   return (
+                //     <FormField
+                //       key={key}
+                //       control={form.control}
+                //       defaultValue={value}
+                //       name={name}
+                //       render={() => (
+                //         <FormItem>
+                //           <FormControl>
+                //             <DropzoneItem
+                //               form={form}
+                //               name={name}
+                //               accept={{ "application/pdf": [] }}
+                //             />
+                //           </FormControl>
+                //         </FormItem>
+                //       )}
+                //     />
+                //   );
+                // }
               })}
             </div>
           </div>
