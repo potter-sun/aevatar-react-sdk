@@ -84,8 +84,6 @@ export default function MyGAevatar({
         duration: 3000,
       });
       setShow(false);
-
-      console.log(error, "getGAevatarList==error");
     }
   }, [setShow, toast, fetchAllList]);
 

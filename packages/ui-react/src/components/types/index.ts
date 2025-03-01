@@ -16,6 +16,13 @@ export type TJSONSchemaType =
   | "file"
   | "null";
 
+export type TDefinitions = {
+  description?: string;
+  enum: any[];
+  type: TJSONSchemaType;
+  "x-enumNames": any[];
+};
+
 export type JSONSchemaType<T> = {
   $schema?: string;
   type: TJSONSchemaType[] | TJSONSchemaType;
@@ -33,6 +40,7 @@ export type JSONSchemaType<T> = {
   minimum?: number;
   maximum?: number;
   uniqueItems?: boolean;
+  definitions?: TDefinitions;
   value?: string;
   // allOf?: JSONSchemaType<any>[];
   // anyOf?: JSONSchemaType<any>[];

@@ -34,6 +34,7 @@ export const handleErrorMessage = (error: any, errorText?: string) => {
   }
   _error = handleError(_error);
   _error = handleContractError(error);
-  if (typeof _error.message === "string" && !_error.message) _errorText = _error.message;
+  if (typeof _error.message === "string" && _error.message !== "")
+    _errorText = _error.message;
   return _errorText || "";
 };

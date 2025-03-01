@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import DropzoneItem from "../DropzoneItem";
+// import DropzoneItem from "../DropzoneItem";
 import { sleep } from "@aevatar-react-sdk/utils";
 import Loading from "../../assets/svg/loading.svg?react";
 
@@ -27,6 +27,7 @@ import { aevatarAI } from "../../utils";
 import type { JSONSchemaType } from "../types";
 import { useToast } from "../../hooks/use-toast";
 import { handleErrorMessage } from "../../utils/error";
+import ErrorBoundary from "../AevatarErrorBoundary";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -44,8 +45,7 @@ export interface IEditGAevatarProps {
   onSuccess?: (type: TEditGaevatarSuccessType) => void;
 }
 
-export default function EditGAevatarInner({
-  className,
+function EditGAevatarInnerCom({
   type = "create",
   agentName,
   agentId,
@@ -73,8 +73,7 @@ export default function EditGAevatarInner({
 
     setBtnLoading("deleting");
     try {
-      const result = await aevatarAI.services.agent.deleteAgent(agentId);
-      console.log(result, "result===");
+      await aevatarAI.services.agent.deleteAgent(agentId);
       // TODO There will be some delay in cqrs
       await sleep(2000);
       onSuccess?.("delete");
@@ -154,19 +153,28 @@ export default function EditGAevatarInner({
   const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
     const jsonSchema = JSON.parse(jsonSchemaString ?? "{}");
 
-    console.log(jsonSchema, "jsonSchema===JSONSchemaProperties");
     const _properties = jsonSchema?.properties;
     if (!_properties) return [];
 
     return Object.entries(_properties).map((item) => {
       const name = item[0];
-      const propertyInfo = item[1] as JSONSchemaType<any>;
+
+      let propertyInfo = item[1] as JSONSchemaType<any>;
       propertyInfo.value = properties?.[name];
+      const type = propertyInfo.type;
+      if (!type) {
+        propertyInfo = {
+          ...jsonSchema?.definitions?.[name],
+          value: propertyInfo.value,
+        };
+        if (propertyInfo.enum) {
+          const index = propertyInfo.enum.indexOf(propertyInfo.value);
+          propertyInfo.value = propertyInfo?.["x-enumNames"][index];
+        }
+      }
       return [item[0], propertyInfo];
     });
   }, [jsonSchemaString, properties]);
-
-  console.log(JSONSchemaProperties, "JSONSchemaProperties===");
 
   const form = useForm<any>();
   useEffect(() => {
@@ -181,7 +189,7 @@ export default function EditGAevatarInner({
 
   const onSubmit = useCallback(
     async (values: any) => {
-      console.log(values, "values=onSubmit");
+      console.log("onSubmit====", values);
       try {
         if (btnLoadingRef.current) return;
         const errorFields: { name: string; error: string }[] = [];
@@ -189,15 +197,31 @@ export default function EditGAevatarInner({
         JSONSchemaProperties?.forEach((item) => {
           const name = item[0];
           const propertyInfo = item[1];
-          const type = propertyInfo.type;
+
+          let type = propertyInfo.type;
+          if (typeof propertyInfo.type === "string") type = [propertyInfo.type];
+
           const isNumberType =
-            type.includes("number") || type.includes("integer");
+            (type.includes("number") || type.includes("integer")) &&
+            !propertyInfo.enum;
 
           const isTypeError = isNumberType
             ? Number.isNaN(Number(values[name]))
             : false;
 
-          if (!values[name]) {
+          const notSupport =
+            type.includes("array") ||
+            type.includes("boolean") ||
+            type.includes("file");
+
+          // if (notSupport)
+          //   return toast({
+          //     title: "error",
+          //     description: "Not support type",
+          //     duration: 3000,
+          //   });
+
+          if (!values[name] && !notSupport) {
             errorFields.push({
               name: name,
               error: "required",
@@ -207,15 +231,69 @@ export default function EditGAevatarInner({
               name: name,
               error: "Please enter a number",
             });
-          } else {
+          } else if (isNumberType) {
+            const value = values[name];
+            if (propertyInfo.maximum) {
+              value > propertyInfo.maximum &&
+                errorFields.push({
+                  name: name,
+                  error: `maximum: ${propertyInfo.maximum}`,
+                });
+            }
+            if (propertyInfo.maximum) {
+              value < propertyInfo.maximum &&
+                errorFields.push({
+                  name: name,
+                  error: `maximum: ${propertyInfo.maximum}`,
+                });
+            }
             paramsList.push({ [name]: values[name] });
+          } else if (propertyInfo.type.includes("string")) {
+            const value = values[name];
+
+            if (propertyInfo.pattern) {
+              const regex = new RegExp(propertyInfo.pattern);
+              const isValid = regex.test(value);
+              if (!isValid) {
+                errorFields.push({
+                  name: name,
+                  error: `Please enter ${propertyInfo.pattern}`,
+                });
+              }
+            }
+            if (
+              propertyInfo.minLength &&
+              value.length < propertyInfo.minLength
+            ) {
+              errorFields.push({
+                name: name,
+                error: `Minlength ${propertyInfo.minLength}`,
+              });
+            }
+            if (
+              propertyInfo.maxLength &&
+              value.length > propertyInfo.maxLength
+            ) {
+              errorFields.push({
+                name: name,
+                error: `maxLength ${propertyInfo.maxLength}`,
+              });
+            }
+            paramsList.push({ [name]: values[name] });
+          } else {
+            let value = values[name];
+            if (propertyInfo.enum) {
+              const _index = propertyInfo["x-enumNames"]?.indexOf(value);
+              value = propertyInfo.enum[_index];
+            }
+
+            paramsList.push({ [name]: value });
           }
         });
 
         if (!values?.agentName) {
           errorFields.push({ name: "agentName", error: "required" });
         }
-        console.log(values?.agentName, errorFields, "values?.agentName===");
         if (errorFields.length > 0) {
           errorFields.forEach((item) => {
             form.setError(item.name, { message: item.error });
@@ -266,93 +344,90 @@ export default function EditGAevatarInner({
   );
 
   return (
-    <div
-      className={clsx(
-        "sdk:relative sdk:bg-black sdk:overflow-auto aevatarai-edit-gaevatar-wrapper",
-        className
-      )}>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CommonHeader leftEle={leftEle} rightEle={rightEle} />
-          <div
-            className={clsx(
-              "sdk:max-w-[352px] sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
-              "sdk:md:max-w-[361px] sdk:md:pt-[0]"
-            )}>
-            <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
-              <div className="sdk:text-black sdk:font-syne sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
-                settings
-              </div>
-              <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
-                Manage your aevatar settings and preferences
-              </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <CommonHeader leftEle={leftEle} rightEle={rightEle} />
+        <div
+          className={clsx(
+            "sdk:max-w-[352px] sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
+            "sdk:md:max-w-[361px] sdk:md:pt-[0]"
+          )}>
+          <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
+            <div className="sdk:text-black sdk:font-syne sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
+              settings
             </div>
-            <div className="sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
-              <FormField
-                control={form.control}
-                name="agentType"
-                disabled={agentTypeList.length === 0 || type === "edit"}
-                render={({ field }) => (
-                  <FormItem aria-labelledby="agentTypeLabel">
-                    <FormLabel id="agentTypeLabel">
-                      *Atomic-aevatars Type
-                    </FormLabel>
-                    <Select
-                      value={field?.value}
-                      disabled={field?.disabled}
-                      onValueChange={(values) => {
-                        onAgentTypeChange(values, field);
-                      }}>
-                      <FormControl>
-                        <SelectTrigger aria-disabled={field?.disabled}>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {agentTypeList.map((agentType) => (
-                          <SelectItem key={agentType} value={agentType}>
-                            {agentType}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                key={"agentName"}
-                control={form.control}
-                defaultValue={agentName}
-                name={"agentName"}
-                render={({ field }) => (
-                  <FormItem aria-labelledby="agentNameLabel">
-                    <FormLabel id="agentNameLabel">
-                      *Atomic-Aevatar Name
-                    </FormLabel>
+            <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
+              Manage your aevatar settings and preferences
+            </div>
+          </div>
+          <div className="sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
+            <FormField
+              control={form.control}
+              name="agentType"
+              disabled={agentTypeList.length === 0 || type === "edit"}
+              render={({ field }) => (
+                <FormItem aria-labelledby="agentTypeLabel">
+                  <FormLabel id="agentTypeLabel">
+                    *Atomic-aevatars Type
+                  </FormLabel>
+                  <Select
+                    value={field?.value}
+                    disabled={field?.disabled}
+                    onValueChange={(values) => {
+                      onAgentTypeChange(values, field);
+                    }}>
                     <FormControl>
-                      <Input
-                        placeholder="Atomic-Aevatar Name"
-                        {...field}
-                        value={field?.value}
-                        onChange={field?.onChange}
-                      />
+                      <SelectTrigger aria-disabled={field?.disabled}>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {JSONSchemaProperties?.map((item, index) => {
-                const name = item[0];
-                const propertyInfo = item[1];
+                    <SelectContent>
+                      {agentTypeList.map((agentType) => (
+                        <SelectItem key={agentType} value={agentType}>
+                          {agentType}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              key={"agentName"}
+              control={form.control}
+              defaultValue={agentName}
+              name={"agentName"}
+              render={({ field }) => (
+                <FormItem aria-labelledby="agentNameLabel">
+                  <FormLabel id="agentNameLabel">
+                    *Atomic-Aevatar Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Atomic-Aevatar Name"
+                      {...field}
+                      value={field?.value}
+                      onChange={field?.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {JSONSchemaProperties?.map((item, index) => {
+              const name = item[0];
+              const propertyInfo = item[1];
 
-                let type = propertyInfo.type;
-                if (typeof propertyInfo.type === "string")
-                  type = [propertyInfo.type];
-                const value = item[1]?.value;
-                const key = `${name}-${index}`;
+              let type = propertyInfo.type;
+              if (!type) return null;
+              if (typeof propertyInfo.type === "string")
+                type = [propertyInfo.type];
 
-                if (propertyInfo.enum) {
+              const value = item[1]?.value;
+              const key = `${name}-${index}`;
+              if (propertyInfo.enum) {
+                return (
                   <FormField
                     key={key}
                     control={form.control}
@@ -368,12 +443,11 @@ export default function EditGAevatarInner({
                           onValueChange={field.onChange}>
                           <FormControl>
                             <SelectTrigger aria-disabled={field?.disabled}>
-                              <SelectValue placeholder="Type" />
+                              <SelectValue placeholder="Select" />
                             </SelectTrigger>
                           </FormControl>
-
                           <SelectContent>
-                            {propertyInfo.enum.map((enumValue) => (
+                            {propertyInfo?.["x-enumNames"]?.map((enumValue) => (
                               <SelectItem key={enumValue} value={enumValue}>
                                 {enumValue}
                               </SelectItem>
@@ -383,61 +457,78 @@ export default function EditGAevatarInner({
                         <FormMessage />
                       </FormItem>
                     )}
-                  />;
-                }
-                if (
-                  type.includes("string") ||
-                  type.includes("number") ||
-                  type.includes("integer")
-                ) {
-                  return (
-                    <FormField
-                      key={key}
-                      control={form.control}
-                      defaultValue={value}
-                      name={name}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{name}</FormLabel>
-                          <FormControl>
-                            <Input
-                              // placeholder="Atomic-Aevatar Name"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  );
-                }
+                  />
+                );
+              }
+              if (
+                type.includes("string") ||
+                type.includes("number") ||
+                type.includes("integer")
+              ) {
+                return (
+                  <FormField
+                    key={key}
+                    control={form.control}
+                    defaultValue={value}
+                    name={name}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{name}</FormLabel>
+                        <FormControl>
+                          <Input
+                            // placeholder="Atomic-Aevatar Name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                );
+              }
 
-                // if (type.includes("file") || type.includes("object")) {
-                //   return (
-                //     <FormField
-                //       key={key}
-                //       control={form.control}
-                //       defaultValue={value}
-                //       name={name}
-                //       render={() => (
-                //         <FormItem>
-                //           <FormControl>
-                //             <DropzoneItem
-                //               form={form}
-                //               name={name}
-                //               accept={{ "application/pdf": [] }}
-                //             />
-                //           </FormControl>
-                //         </FormItem>
-                //       )}
-                //     />
-                //   );
-                // }
-              })}
-            </div>
+              // if (type.includes("file") || type.includes("object")) {
+              //   return (
+              //     <FormField
+              //       key={key}
+              //       control={form.control}
+              //       defaultValue={value}
+              //       name={name}
+              //       render={() => (
+              //         <FormItem>
+              //           <FormControl>
+              //             <DropzoneItem
+              //               form={form}
+              //               name={name}
+              //               accept={{ "application/pdf": [] }}
+              //             />
+              //           </FormControl>
+              //         </FormItem>
+              //       )}
+              //     />
+              //   );
+              // }
+            })}
           </div>
-        </form>
-      </Form>
+        </div>
+      </form>
+    </Form>
+  );
+}
+
+export default function EditGAevatarInner({
+  className,
+  ...props
+}: IEditGAevatarProps) {
+  return (
+    <div
+      className={clsx(
+        "sdk:relative sdk:bg-black sdk:overflow-auto aevatarai-edit-gaevatar-wrapper",
+        className
+      )}>
+      <ErrorBoundary>
+        <EditGAevatarInnerCom {...props} />
+      </ErrorBoundary>
     </div>
   );
 }
