@@ -30,9 +30,9 @@ export class AevatarRequest extends FetchRequest implements IAevatarRequest {
       if (result?.data) return result.data;
       // get jwt token
       if (result?.access_token) return result;
+      if (result.code === "20001") return result.data;
       throw result;
     } catch (error: any) {
-      console.log(error, "error===send=AevatarRequest");
       if (!this.commonHeaders.Authorization || error?.status === 401) {
         if (!this.getAuthTokenPending) {
           this.getAuthTokenPending = true;

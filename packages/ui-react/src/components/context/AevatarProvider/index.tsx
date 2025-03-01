@@ -25,7 +25,6 @@ export function useAevatar(): [AevatarState, BasicActions] {
 }
 
 function reducer(state: any, { type, payload }: any) {
-  console.log(payload, type, "textContent====");
   switch (type) {
     case basicAevatarView.destroy.type: {
       return INITIAL_STATE;
@@ -50,7 +49,6 @@ export default function Provider({ children }: ProviderProps) {
 
   useEffect(() => {
     aevatarEvents.AuthTokenGet.addListener(async () => {
-      console.log(" aevatarEvents.AuthTokenGet.addListener===");
       const token = await ConfigProvider.config?.getAevatarAuthToken?.();
       aevatarEvents.AuthTokenReceive.emit(token);
     });

@@ -5,6 +5,7 @@ import {
   aevatarAI,
   EditGAevatarInner,
   AevatarProvider,
+  Button,
 } from "@aevatar-react-sdk/ui-react";
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
 import { useCallback, useState } from "react";
@@ -13,13 +14,27 @@ const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
 );
 
+import Form from "@rjsf/core";
+import type { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
+
+const schema: RJSFSchema = {
+  title: "Todo",
+  type: "object",
+  required: ["title"],
+  properties: {
+    title: { type: "string", title: "Title", default: "A new task" },
+    done: { type: "boolean", title: "Done?", default: false },
+  },
+};
+
 const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 
 ConfigProvider.setConfig({
   connectUrl: "https://auth-station-staging.aevatar.ai",
   requestDefaults: {
     // baseURL: "/aevatarURL",
-    baseURL: "https://station-staging.aevatar.ai",
+    baseURL: "https://station-developer-staging.aevatar.ai/test-client",
   },
 });
 
@@ -63,6 +78,18 @@ export default function UI() {
   const onAuthFinish = useCallback(() => {
     setStage(Stage.myGAevatar);
   }, []);
+  const [agentSchema, setAgentSchema] = useState<any>(schema);
+  const getSchema = useCallback(async () => {
+    const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
+    console.log(result, "result==");
+    const list = result.filter((item) => item.agentType === "frontagenttest");
+    const schema = JSON.parse(list[0]?.propertyJsonSchema ?? "{}");
+    // console.log(schemaParser(schema), "schemaParser====");
+    setAgentSchema(schema);
+    console.log(result, "result===");
+  }, []);
+
+  const log = (type: any) => console.log.bind(console, type);
 
   return (
     <div>
@@ -106,6 +133,16 @@ export default function UI() {
           />
         )}
       </AevatarProvider>
+
+      <Button onClick={getSchema}>getSchema</Button>
+
+      <Form
+        schema={agentSchema}
+        validator={validator}
+        onChange={log("changed")}
+        onSubmit={log("submitted")}
+        onError={log("errors")}
+      />
     </div>
   );
 }

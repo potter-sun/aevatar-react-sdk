@@ -75,6 +75,7 @@ export const useAuthToken = () => {
         signature: signResult.signature,
         plain_text: plainText,
         ca_hash: caHash,
+        // TODO
         chain_id: "tDVW",
         source: "portkey",
         client_id: "AevatarAuthServer",

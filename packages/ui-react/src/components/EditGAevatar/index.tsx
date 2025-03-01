@@ -64,13 +64,9 @@ export default function EditGAevatar({
     setAgentType(agentTypeList[0]);
   }, [agentTypeList]);
 
-  console.log(agentType, "agentType==");
-
   useEffect(() => {
     getAllAgentsConfiguration();
   }, [getAllAgentsConfiguration]);
-
-  console.log(jsonSchemaString, "configuarationParams?.agentParams==");
 
   return (
     <div

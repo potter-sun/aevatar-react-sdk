@@ -28,7 +28,7 @@ export default function MyGAevatar({
   height = "100vh",
   width,
   className,
-  maxGAevatarCount = 999999,
+  maxGAevatarCount,
   onNewGAevatar,
   onEditGaevatar,
 }: IMyGAevatarProps) {
@@ -84,8 +84,6 @@ export default function MyGAevatar({
         duration: 3000,
       });
       setShow(false);
-
-      console.log(error, "getGAevatarList==error");
     }
   }, [setShow, toast, fetchAllList]);
 
@@ -117,7 +115,9 @@ export default function MyGAevatar({
       <CommonHeader
         leftEle={"my g-aevatars"}
         rightEle={
-          gAevatarList && maxGAevatarCount >= gAevatarList.length && newGA
+          gAevatarList &&
+          (maxGAevatarCount ? maxGAevatarCount >= gAevatarList.length : true) &&
+          newGA
         }
       />
 

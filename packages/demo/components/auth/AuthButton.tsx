@@ -6,18 +6,18 @@ import { useAuthToken } from "../../hooks/useAuthToken";
 export default function AuthButton({ onFinish }: { onFinish: () => void }) {
   const { walletInfo } = useConnectWallet();
   console.log(walletInfo, "walletInfo==");
-  const getAutoToken = useAuthToken();
+  const getAuthToken = useAuthToken();
 
   useEffect(() => {
     ConfigProvider.setConfig({
-      getAevatarAuthToken: getAutoToken,
+      getAevatarAuthToken: getAuthToken,
     });
-  }, [getAutoToken]);
+  }, [getAuthToken]);
 
   const onGetAuthToken = useCallback(async () => {
-    await getAutoToken();
+    await getAuthToken();
     onFinish();
-  }, [getAutoToken, onFinish]);
+  }, [getAuthToken, onFinish]);
 
   const getList = useCallback(async () => {
     const result = await aevatarAI.services.agent.getAllAgentsConfiguration();

@@ -77,7 +77,6 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
 
   async getAuthTokenFromApi(params: RefreshTokenConfig) {
     const res = await this.connectServices.getConnectToken(params);
-    console.log(res, "res==getAuthTokenFromApi=");
     const token_type = res.token_type;
     const access_token = res.access_token;
 
