@@ -1,5 +1,19 @@
 # demo
 
+## 0.1.0
+
+### Minor Changes
+
+- 4b1ba7d: test
+
+### Patch Changes
+
+- Updated dependencies [4f8e7ff]
+- Updated dependencies [4b1ba7d]
+- Updated dependencies [4b1ba7d]
+  - @aevatar-react-sdk/services@0.2.0
+  - @aevatar-react-sdk/ui-react@0.2.0
+
 ## 0.1.0-alpha.1
 
 ### Minor Changes

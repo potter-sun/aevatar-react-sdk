@@ -1,5 +1,13 @@
 # @aevatar-react-sdk/types
 
+## 0.2.0
+
+### Minor Changes
+
+- 4f8e7ff: fix api
+- 4b1ba7d: test
+- 4b1ba7d: publish alpha
+
 ## 0.2.0-alpha.1
 
 ### Minor Changes

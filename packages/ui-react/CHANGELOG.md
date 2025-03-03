@@ -1,5 +1,23 @@
 # @aevatar-react-sdk/ui-react
 
+## 0.2.0
+
+### Minor Changes
+
+- 4f8e7ff: fix api
+- 4b1ba7d: test
+- 4b1ba7d: publish alpha
+
+### Patch Changes
+
+- Updated dependencies [4f8e7ff]
+- Updated dependencies [4b1ba7d]
+- Updated dependencies [4b1ba7d]
+  - @aevatar-react-sdk/core@0.2.0
+  - @aevatar-react-sdk/services@0.2.0
+  - @aevatar-react-sdk/types@0.2.0
+  - @aevatar-react-sdk/utils@0.2.0
+
 ## 0.2.0-alpha.1
 
 ### Minor Changes
