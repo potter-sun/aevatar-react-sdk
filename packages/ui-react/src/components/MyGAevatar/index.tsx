@@ -123,7 +123,7 @@ export default function MyGAevatar({
 
       <div
         className={clsx(
-          "sdk:overflow-auto sdk:flex-1",
+          "sdk:overflow-auto sdk:flex-1 sdk:lg:pb-[40px] sdk:pb-[16px]",
           !gAevatarList && "sdk:flex sdk:justify-center sdk:items-center"
         )}>
         {(!gAevatarList || gAevatarList?.length === 0) && (

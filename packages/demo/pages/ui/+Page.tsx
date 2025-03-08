@@ -30,13 +30,13 @@ const schema: RJSFSchema = {
 
 const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 
-ConfigProvider.setConfig({
-  connectUrl: "https://auth-station-staging.aevatar.ai",
-  requestDefaults: {
-    // baseURL: "/aevatarURL",
-    baseURL: "https://station-developer-staging.aevatar.ai/test-client",
-  },
-});
+// ConfigProvider.setConfig({
+//   connectUrl: "https://auth-station-staging.aevatar.ai",
+//   requestDefaults: {
+//     // baseURL: "/aevatarURL",
+//     baseURL: "https://station-developer-staging.aevatar.ai/test-client",
+//   },
+// });
 
 enum Stage {
   myGAevatar = "MyGAevatar",

@@ -182,7 +182,7 @@ function EditGAevatarInnerCom({
     if (!agentType) {
       form.setValue("agentType", defaultAgentType || agentTypeList[0]);
     }
-    if (!agentName) {
+    if (agentName) {
       form.setValue("agentName", agentName);
     }
   }, [defaultAgentType, agentTypeList, agentName, form]);
@@ -247,7 +247,7 @@ function EditGAevatarInnerCom({
                   error: `maximum: ${propertyInfo.maximum}`,
                 });
             }
-            paramsList.push({ [name]: values[name] });
+            paramsList.push({ [name]: Number(values[name]) });
           } else if (propertyInfo.type.includes("string")) {
             const value = values[name];
 
@@ -401,11 +401,11 @@ function EditGAevatarInnerCom({
               render={({ field }) => (
                 <FormItem aria-labelledby="agentNameLabel">
                   <FormLabel id="agentNameLabel">
-                    *Atomic-Aevatar Name
+                    *atomic-aevatar name
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Atomic-Aevatar Name"
+                      placeholder="atomic-aevatar name"
                       {...field}
                       value={field?.value}
                       onChange={field?.onChange}
@@ -476,7 +476,7 @@ function EditGAevatarInnerCom({
                         <FormLabel>{name}</FormLabel>
                         <FormControl>
                           <Input
-                            // placeholder="Atomic-Aevatar Name"
+                            // placeholder="atomic-aevatar name"
                             {...field}
                           />
                         </FormControl>
@@ -523,7 +523,7 @@ export default function EditGAevatarInner({
   return (
     <div
       className={clsx(
-        "sdk:relative sdk:bg-black sdk:overflow-auto aevatarai-edit-gaevatar-wrapper",
+        "sdk:relative sdk:bg-black sdk:overflow-auto sdk:lg:pb-[40px] sdk:pb-[16px] aevatarai-edit-gaevatar-wrapper",
         className
       )}>
       <ErrorBoundary>

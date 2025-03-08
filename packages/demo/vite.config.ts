@@ -32,17 +32,20 @@ export default defineConfig((config) => ({
   },
 
   server: {
+    cors: true,
+    allowedHosts: true,
     proxy: {
       "/connect": {
         target: "https://auth-station-staging.aevatar.ai",
         changeOrigin: true,
-        secure: false,
+        secure: true,
+        // rewrite: (path) => path.replace(/^\/auth/, ''),
       },
-      "/automatedx-client": {
-        target: "https://station-developer-staging.aevatar.ai",
+      "/api": {
+        target: "https://station-developer-staging.aevatar.ai/EchoListen-client",
         changeOrigin: true,
-        secure: false,
-        // rewrite: (path) => path.replace(/^\/aevatarURL\/api/, "/api"),
+        secure: true,
+        // rewrite: (path) => path.replace(/^\/test-client/, ''),
       },
     },
   },

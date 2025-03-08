@@ -94,7 +94,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitiveContent
       ref={ref}
       className={cn(
-        "sdk:relative sdk:font-pro sdk:z-50 sdk:max-h-183  sdk:bg-[#303030] sdk:overflow-hidden sdk:text-popover-foreground sdk:shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "sdk:relative sdk:font-pro sdk:max-h-[248px] sdk:overflow-auto sdk:z-50  sdk:bg-[#303030] sdk:text-popover-foreground sdk:shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         "sdk:border-none sdk:w-[319px] sdk:md:w-[329px] sdk:p-[20px] sdk:md:p-[16px] sdk:md:px-[22px]",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
@@ -102,14 +102,14 @@ const SelectContent = React.forwardRef<
       )}
       position={position}
       {...props}>
-      <SelectScrollUpButton />
+      {/* <SelectScrollUpButton /> */}
       <SelectPrimitiveViewport
         className={cn(
           position === "popper" && "sdk:h-[var(--radix-select-trigger-height)]"
         )}>
         {children}
       </SelectPrimitiveViewport>
-      <SelectScrollDownButton />
+      {/* <SelectScrollDownButton /> */}
     </SelectPrimitiveContent>
   </SelectPrimitive.Portal>
 ));
@@ -145,7 +145,7 @@ const SelectItem = React.forwardRef<
     className={cn(
       "sdk:relative sdk:cursor-pointer sdk:select-none sdk:items-center sdk:text-sm sdk:outline-none sdk:focus:bg-accent sdk:focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "sdk:text-[#B9B9B9] sdk:text-center sdk:font-syne sdk:text-[11px] sdk:font-bold sdk:leading-normal sdk:lowercase sdk:py-[7px]",
-      "sdk:select-item-wrapper",
+      "select-item-wrapper",
       className
     )}
     {...props}>

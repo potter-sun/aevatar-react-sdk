@@ -21,7 +21,7 @@ const baseConfig: IConfigProps["baseConfig"] = {
   chainId: CHAIN_ID,
   sideChainId: ChainConfig.sideChainId,
   showVconsole: !IS_MAINNET,
-  design: SignInDesignEnum.Web2Design,
+  design: SignInDesignEnum.CryptoDesign,
   theme: "dark",
   appName: "ai-dashboard",
 };
