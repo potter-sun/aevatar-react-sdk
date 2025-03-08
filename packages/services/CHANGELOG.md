@@ -1,5 +1,14 @@
 # @aevatar-react-sdk/services
 
+## 0.2.1
+
+### Patch Changes
+
+- 30b187f: style fixed
+- Updated dependencies [30b187f]
+  - @aevatar-react-sdk/types@0.2.1
+  - @aevatar-react-sdk/utils@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

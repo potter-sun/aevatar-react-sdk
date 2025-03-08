@@ -1,5 +1,13 @@
 # demo
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [30b187f]
+  - @aevatar-react-sdk/services@0.2.1
+  - @aevatar-react-sdk/ui-react@0.2.1
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @aevatar-react-sdk/types
 
+## 0.2.1
+
+### Patch Changes
+
+- 30b187f: style fixed
+
 ## 0.2.0
 
 ### Minor Changes
