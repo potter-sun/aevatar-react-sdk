@@ -13,7 +13,7 @@ describe("AevatarCardInner", () => {
     className: "test-class",
     onEditGaevatar: mockOnEditGaevatar,
     id: "123",
-    grainId: "grain-123", // Added missing property
+    businessAgentGrainId: '',
     agentGuid: "agent-123", // Added missing property
     agentType: "type-1", // Added missing property
     name: "AI-123", // Added missing property

@@ -1,32 +1,22 @@
 import {
   MyGAevatar,
   CreateGAevatar,
-  ConfigProvider,
   aevatarAI,
   EditGAevatarInner,
   AevatarProvider,
   Button,
+  WorkflowConfiguration,
 } from "@aevatar-react-sdk/ui-react";
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+
 import { clientOnly } from "vike-react/clientOnly";
+import { sleep } from "@aevatar-react-sdk/utils";
+
+import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
 );
-
-import Form from "@rjsf/core";
-import type { RJSFSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv8";
-
-const schema: RJSFSchema = {
-  title: "Todo",
-  type: "object",
-  required: ["title"],
-  properties: {
-    title: { type: "string", title: "Title", default: "A new task" },
-    done: { type: "boolean", title: "Done?", default: false },
-  },
-};
 
 const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 
@@ -42,10 +32,12 @@ enum Stage {
   myGAevatar = "MyGAevatar",
   newGAevatar = "newGAevatar",
   editGAevatar = "editGAevatar",
+  Workflow = "Workflow",
 }
 
 export default function UI() {
   const [stage, setStage] = useState<Stage>();
+  const [gaevatarList, setGaevatarList] = useState<IAgentInfoDetail[]>();
   const onNewGAevatar = useCallback(() => {
     console.log("onNewGAevatar");
     setStage(Stage.newGAevatar);
@@ -75,21 +67,72 @@ export default function UI() {
     setStage(Stage.editGAevatar);
   }, []);
 
-  const onAuthFinish = useCallback(() => {
+  const onAuthFinish = useCallback(() => {}, []);
+
+  const onShowGaevatar = useCallback(() => {
     setStage(Stage.myGAevatar);
   }, []);
-  const [agentSchema, setAgentSchema] = useState<any>(schema);
-  const getSchema = useCallback(async () => {
-    const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
-    console.log(result, "result==");
-    const list = result.filter((item) => item.agentType === "frontagenttest");
-    const schema = JSON.parse(list[0]?.propertyJsonSchema ?? "{}");
-    // console.log(schemaParser(schema), "schemaParser====");
-    setAgentSchema(schema);
-    console.log(result, "result===");
+
+  const getGaevatarList = useCallback(async () => {
+    const result = await aevatarAI.services.agent.getAgents({
+      pageIndex: 0,
+      pageSize: 100,
+    });
+    const list = await Promise.all(
+      result.map(async (item) => {
+        const result = await aevatarAI.services.agent.getAgentInfo(item.id);
+        return { ...result, businessAgentGrainId: item.businessAgentGrainId };
+      })
+    );
+    console.log(list, "list===");
+    setGaevatarList(list);
   }, []);
 
-  const log = (type: any) => console.log.bind(console, type);
+  const onShowWorkflow = useCallback(async () => {
+    getGaevatarList();
+    setStage(Stage.Workflow);
+  }, [getGaevatarList]);
+
+  const getTokenByclient = useCallback(async () => {
+    await aevatarAI.getAuthTokenWithClient({
+      grant_type: "password",
+      scope: "Aevatar",
+      username: (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
+      client_id: "AevatarAuthServer",
+      password: (import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
+    } as any);
+  }, []);
+
+  const onGaevatarChange = useCallback(
+    async (isCreate: boolean, data: { params: any; agentId?: string }) => {
+      console.log(isCreate, data, "isCreate, data=");
+      let result: IAgentInfoDetail;
+      if (isCreate) {
+        result = await aevatarAI.services.agent.createAgent(data.params);
+      } else {
+        if (!data.agentId) throw "Not agentId";
+        result = await aevatarAI.services.agent.updateAgentInfo(
+          data.agentId,
+          data.params
+        );
+      }
+      await sleep(500);
+      await getGaevatarList();
+      return result;
+    },
+    [getGaevatarList]
+  );
+
+  const [editWorkflow, setEditWorkflow] = useState<any>();
+
+  useEffect(() => {
+    // sleep(1000).then(() => {
+    //   setEditWorkflow({
+    //     workflowGrainId: "string",
+    //     workUnitRelations: workflowRelation,
+    //   });
+    // });
+  }, []);
 
   return (
     <div>
@@ -97,6 +140,10 @@ export default function UI() {
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />
+        <Button onClick={getTokenByclient}>getTokenByclient</Button>
+
+        <Button onClick={onShowGaevatar}>show gaevatar</Button>
+        <Button onClick={onShowWorkflow}>show workflow</Button>
 
         <div className="text-[12px] lg:text-[24px]">aad</div>
 
@@ -132,17 +179,22 @@ export default function UI() {
             }}
           />
         )}
+        {stage === Stage.Workflow && (
+          <div className="h-[900px]">
+            <WorkflowConfiguration
+              sidebarConfig={{ gaevatarList, isNewGAevatar: true }}
+              onBack={() => {
+                setStage(undefined);
+              }}
+              onSave={(workflowId: string) => {
+                console.log(workflowId, "workflowId==");
+              }}
+              editWorkflow={editWorkflow}
+              onGaevatarChange={onGaevatarChange}
+            />
+          </div>
+        )}
       </AevatarProvider>
-
-      <Button onClick={getSchema}>getSchema</Button>
-
-      <Form
-        schema={agentSchema}
-        validator={validator}
-        onChange={log("changed")}
-        onSubmit={log("submitted")}
-        onError={log("errors")}
-      />
     </div>
   );
 }
