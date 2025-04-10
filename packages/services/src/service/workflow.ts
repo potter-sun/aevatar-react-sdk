@@ -40,7 +40,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   getWorkflow(workflowGranId: string): Promise<IWorkUnitRelationsItem[]> {
     return this._request.send({
       method: "GET",
-      url: `/api/agent/workflow/${workflowGranId}`,
+      url: `/api/agent/workflow?workflowGranId=${workflowGranId}`,
     });
   }
 }

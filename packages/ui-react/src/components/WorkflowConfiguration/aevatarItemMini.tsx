@@ -72,7 +72,7 @@ export default function AevatarItem(props: IProps) {
           />
           <div className="sdk:px-[15px] sdk:py-[7px] sdk:relative sdk:flex sdk:flex-col ">
             <TooltipProvider delayDuration={0}>
-              <Tooltip>
+              <Tooltip open={name.length < 20 ? false : undefined}>
                 <TooltipTrigger asChild>
                   <div className="sdk:workflow-aevatar-item-name sdk:truncate">
                     {name}
@@ -82,7 +82,7 @@ export default function AevatarItem(props: IProps) {
               </Tooltip>
             </TooltipProvider>
             <TooltipProvider delayDuration={0}>
-              <Tooltip>
+              <Tooltip open={agentType.length < 20 ? false : undefined}>
                 <TooltipTrigger asChild>
                   <div className="sdk:workflow-aevatar-item-id sdk:truncate">
                     {agentType}

@@ -13,7 +13,10 @@ import { useCallback, useEffect, useState } from "react";
 import { clientOnly } from "vike-react/clientOnly";
 import { sleep } from "@aevatar-react-sdk/utils";
 
-import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
+import type {
+  IAgentInfoDetail,
+  IAgentsConfiguration,
+} from "@aevatar-react-sdk/services";
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
 );
@@ -88,10 +91,32 @@ export default function UI() {
     setGaevatarList(list);
   }, []);
 
+  const [agentTypeList, setAgentTypeList] = useState<IAgentsConfiguration[]>();
+
+  const getAllAgentsConfiguration = useCallback(async () => {
+    const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
+    setAgentTypeList(result);
+  }, []);
+
   const onShowWorkflow = useCallback(async () => {
-    getGaevatarList();
+    await Promise.all([getGaevatarList(), getAllAgentsConfiguration()]);
+
     setStage(Stage.Workflow);
-  }, [getGaevatarList]);
+  }, [getGaevatarList, getAllAgentsConfiguration]);
+
+  const [editWorkflow, setEditWorkflow] = useState<any>();
+
+  const onEditWorkflow = useCallback(async () => {
+    const workflowId = localStorage.getItem("workflowId");
+    if (!workflowId) return;
+    const result = await aevatarAI.services.workflow.getWorkflow(workflowId);
+    setEditWorkflow({
+      workflowGrainId: workflowId,
+      workUnitRelations: result,
+    });
+    onShowWorkflow();
+    console.log(workflowId, result, "workflowId=");
+  }, [onShowWorkflow]);
 
   const getTokenByclient = useCallback(async () => {
     await aevatarAI.getAuthTokenWithClient({
@@ -123,17 +148,6 @@ export default function UI() {
     [getGaevatarList]
   );
 
-  const [editWorkflow, setEditWorkflow] = useState<any>();
-
-  useEffect(() => {
-    // sleep(1000).then(() => {
-    //   setEditWorkflow({
-    //     workflowGrainId: "string",
-    //     workUnitRelations: workflowRelation,
-    //   });
-    // });
-  }, []);
-
   return (
     <div>
       <AevatarProvider>
@@ -144,6 +158,7 @@ export default function UI() {
 
         <Button onClick={onShowGaevatar}>show gaevatar</Button>
         <Button onClick={onShowWorkflow}>show workflow</Button>
+        <Button onClick={onEditWorkflow}>edit workflow</Button>
 
         <div className="text-[12px] lg:text-[24px]">aad</div>
 
@@ -182,12 +197,17 @@ export default function UI() {
         {stage === Stage.Workflow && (
           <div className="h-[900px]">
             <WorkflowConfiguration
-              sidebarConfig={{ gaevatarList, isNewGAevatar: true }}
+              sidebarConfig={{
+                gaevatarList,
+                isNewGAevatar: true,
+                gaevatarTypeList: agentTypeList,
+              }}
               onBack={() => {
                 setStage(undefined);
               }}
               onSave={(workflowId: string) => {
                 console.log(workflowId, "workflowId==");
+                workflowId && localStorage.setItem("workflowId", workflowId);
               }}
               editWorkflow={editWorkflow}
               onGaevatarChange={onGaevatarChange}

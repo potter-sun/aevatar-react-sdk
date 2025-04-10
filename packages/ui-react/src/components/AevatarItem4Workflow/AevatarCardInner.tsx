@@ -72,15 +72,19 @@ export default function AevatarCardInner({
               </div>
               <div
                 className={clsx(
-                  !isNew && "sdk:flex sdk:flex-wrap sdk:gap-[10px]"
+                  (!isNew || item?.[1].value) &&
+                    "sdk:flex sdk:flex-wrap sdk:gap-[10px]"
                 )}>
                 {/* {
                 propertiesValue(item?.[1]).map((info) => ( */}
                 <div
                   className={clsx(
                     "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white ",
-                    isNew && "sdk:h-[23px] sdk:w-full",
-                    isNew && item?.[1].enum && "sdk:w-[100px]!"
+                    isNew && !item?.[1].value && "sdk:h-[23px] sdk:w-full",
+                    isNew &&
+                      !item?.[1].value &&
+                      item?.[1].enum &&
+                      "sdk:w-[100px]!"
                   )}>
                   {item?.[1].value ?? ""}
                 </div>

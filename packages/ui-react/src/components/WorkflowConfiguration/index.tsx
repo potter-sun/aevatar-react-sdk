@@ -1,11 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogOverlay,
-  DialogPortal,
-  DialogTrigger,
-} from "../ui";
+import { Button, Dialog, DialogOverlay, DialogPortal } from "../ui";
 import { type IWorkflowInstance, Workflow } from "../Workflow";
 import Sidebar from "./sidebar";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -18,19 +12,23 @@ import WorkflowSaveFailedModal, {
 import WorkflowUnsaveModal from "../WorkflowUnsaveModal";
 import type {
   IAgentInfoDetail,
+  IAgentsConfiguration,
   IWorkUnitRelationsItem,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
 import { sleep } from "@aevatar-react-sdk/utils";
-import DialogStimulate from "./dialogStimulate";
+import Loading from "../../assets/svg/loading.svg?react";
 import { aevatarAI } from "../../utils";
 import { handleErrorMessage } from "../../utils/error";
 import { useToast } from "../../hooks/use-toast";
 import type { INode } from "../Workflow/types";
+import clsx from "clsx";
+import { useUpdateEffect } from "react-use";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
     gaevatarList?: IAgentInfoDetail[];
+    gaevatarTypeList?: IAgentsConfiguration[];
     isNewGAevatar?: boolean;
   };
   editWorkflow?: {
@@ -75,28 +73,40 @@ const WorkflowConfiguration = ({
     []
   );
 
+  const [btnLoading, setBtnLoading] = useState<boolean>();
+
+  const isWorkflowChanged = useRef<boolean>();
+
   const onSave = useCallback(async () => {
     const workUnitRelations = workflowRef.current.getWorkUnitRelations();
     try {
+      setBtnLoading(true);
       if (!workUnitRelations.length) throw "Please finish workflow";
-      const result = await aevatarAI.services.workflow.create({
-        workUnitRelations,
-      });
-      onSaveHandler?.(result.workflowGrainId);
+      let workflowGrainId = editWorkflow?.workflowGrainId;
+      if (editWorkflow?.workflowGrainId) {
+        await aevatarAI.services.workflow.edit({
+          workflowGrainId: editWorkflow?.workflowGrainId ?? "",
+          workUnitRelations,
+        });
+      } else {
+        const result = await aevatarAI.services.workflow.create({
+          workUnitRelations,
+        });
+        workflowGrainId = result.workflowGrainId;
+      }
+
+      onSaveHandler?.(workflowGrainId);
     } catch (error) {
+      console.log("error===");
       toast({
         title: "error",
         description: handleErrorMessage(error, "create workflow error"),
         duration: 3000,
       });
     }
-
+    setBtnLoading(false);
     // setSaveFailed(SaveFailedError.maxAgents);
-  }, [toast, onSaveHandler]);
-
-  const onUnsavedBack = useCallback(() => {
-    setUnsavedModal(true);
-  }, []);
+  }, [editWorkflow, toast, onSaveHandler]);
 
   const onConfirmSaveHandler = useCallback(
     (saved?: boolean) => {
@@ -126,30 +136,40 @@ const WorkflowConfiguration = ({
       [onGaevatarChange]
     );
 
-  const [stimulateResult, setStimulateResult] = useState<{
-    data?: string;
-    message?: string;
-  }>();
+  // const [stimulateResult, setStimulateResult] = useState<{
+  //   data?: string;
+  //   message?: string;
+  // }>();
 
-  const onStimulate = useCallback(async () => {
-    try {
-      const workUnitRelations = workflowRef.current.getWorkUnitRelations();
-      await sleep(1000);
-      const result = await aevatarAI.services.workflow.simulate({
-        workflowGrainId: "",
-        workUnitRelations,
-      });
-      setStimulateResult({ data: result });
-    } catch (error) {
-      setStimulateResult({ message: handleErrorMessage(error) });
-    }
-  }, []);
+  // const onStimulate = useCallback(async () => {
+  //   try {
+  //     const workUnitRelations = workflowRef.current.getWorkUnitRelations();
+  //     await sleep(1000);
+  //     const result = await aevatarAI.services.workflow.simulate({
+  //       workflowGrainId: "",
+  //       workUnitRelations,
+  //     });
+  //     setStimulateResult({ data: result });
+  //   } catch (error) {
+  //     setStimulateResult({ message: handleErrorMessage(error) });
+  //   }
+  // }, []);
 
   const [disabledAgent, setDisabledAgent] = useState<string[]>();
+  const [nodeList, setNodeList] = useState<INode[]>();
+
+  const onUnsavedBack = useCallback(() => {
+    setUnsavedModal(true);
+  }, []);
 
   const onNodesChanged = useCallback((nodes: INode[]) => {
+    setNodeList(nodes);
     setDisabledAgent(nodes.map((item) => item.id));
   }, []);
+
+  useUpdateEffect(() => {
+    isWorkflowChanged.current = true;
+  }, [nodeList]);
 
   return (
     <ReactFlowProvider>
@@ -168,7 +188,7 @@ const WorkflowConfiguration = ({
               workflow configuration
             </div>
             <div className="sdk:flex sdk:gap-2 ">
-              <Dialog>
+              {/* <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     onClick={onStimulate}
@@ -184,11 +204,18 @@ const WorkflowConfiguration = ({
                     message={stimulateResult?.message}
                   />
                 </DialogPortal>
-              </Dialog>
+              </Dialog> */}
               <Button
                 variant="default"
                 onClick={onSave}
                 className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]">
+                {btnLoading && (
+                  <Loading
+                    key={"save"}
+                    className={clsx("aevatarai-loading-icon")}
+                    style={{ width: 14, height: 14 }}
+                  />
+                )}
                 save
               </Button>
             </div>
@@ -196,13 +223,14 @@ const WorkflowConfiguration = ({
           {/* content */}
 
           <div
-            className="sdk:flex sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
+            className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
             ref={setContainer}>
             {/* Sidebar */}
             <Sidebar
               disabledGeavatarIds={disabledAgent}
               gaevatarList={sidebarConfig.gaevatarList}
               isNewGAevatar={sidebarConfig.isNewGAevatar}
+              gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
             />
 
             {/* Main Content */}
@@ -210,7 +238,7 @@ const WorkflowConfiguration = ({
               <Dialog open={open} onOpenChange={setOpen}>
                 <Workflow
                   editWorkflow={editWorkflow}
-                  gaevatarList={sidebarConfig.gaevatarList}
+                  gaevatarList={sidebarConfig?.gaevatarList}
                   ref={workflowRef}
                   onCardClick={onClickWorkflowItem}
                   onNodesChanged={onNodesChanged}

@@ -24,6 +24,7 @@ import ScanCardNode from "../AevatarItem4Workflow";
 import Background from "./background";
 import type {
   IAgentInfoDetail,
+  IAgentsConfiguration,
   IWorkUnitRelationsItem,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";
@@ -108,7 +109,6 @@ export const Workflow = forwardRef(
         onCardClick,
         deleteNode
       );
-      console.log(nodes, edges, "nodes==edges");
       setNodes(nodes);
       setEdges(edges);
     }, [
@@ -123,7 +123,6 @@ export const Workflow = forwardRef(
     const [updaterList, setUpdaterList] = useState<IAgentInfoDetail[]>();
 
     useUpdateEffect(() => {
-      console.log(gaevatarList, "gaevatarList==Workflow");
       setUpdaterList(gaevatarList);
       const agentMap: Map<string, IAgentInfoDetail> = new Map();
       gaevatarList.forEach((item) => {
@@ -159,7 +158,6 @@ export const Workflow = forwardRef(
           },
         ];
       }
-      console.log(data, "data===getWorkUnitRelations");
       const result = data.nodes.map((node) => {
         const grainId = node.data.agentInfo.businessAgentGrainId;
         const xPosition = node.position.x;
@@ -192,6 +190,8 @@ export const Workflow = forwardRef(
       });
       return result.flat();
     }, [nodes, edges]);
+
+    console.log(nodes, "nodes===getWorkUnitRelations");
 
     useImperativeHandle(
       ref,
