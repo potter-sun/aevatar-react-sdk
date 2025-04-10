@@ -118,6 +118,8 @@ export default function UI() {
     console.log(workflowId, result, "workflowId=");
   }, [onShowWorkflow]);
 
+  const [showAction, setShowAction] = useState<boolean>();
+
   const getTokenByclient = useCallback(async () => {
     await aevatarAI.getAuthTokenWithClient({
       grant_type: "password",
@@ -126,6 +128,7 @@ export default function UI() {
       client_id: "AevatarAuthServer",
       password: (import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
     } as any);
+    setShowAction(true);
   }, []);
 
   const onGaevatarChange = useCallback(
@@ -155,10 +158,13 @@ export default function UI() {
 
         <AuthButton onFinish={onAuthFinish} />
         <Button onClick={getTokenByclient}>getTokenByclient</Button>
-
-        <Button onClick={onShowGaevatar}>show gaevatar</Button>
-        <Button onClick={onShowWorkflow}>show workflow</Button>
-        <Button onClick={onEditWorkflow}>edit workflow</Button>
+        {showAction && (
+          <>
+            <Button onClick={onShowGaevatar}>show gaevatar</Button>
+            <Button onClick={onShowWorkflow}>show workflow</Button>
+            <Button onClick={onEditWorkflow}>edit workflow</Button>
+          </>
+        )}
 
         <div className="text-[12px] lg:text-[24px]">aad</div>
 
