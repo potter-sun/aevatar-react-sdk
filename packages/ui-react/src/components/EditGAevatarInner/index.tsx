@@ -308,10 +308,11 @@ function EditGAevatarInnerCom({
         }, {});
 
         const params = {
-          agentType: values.agentType,
+          agentType: values.agentType ?? (defaultAgentType || agentTypeList[0]),
           name: values.agentName,
           properties: properties,
         };
+        console.log(params, defaultAgentType, "params==updateAgentInfo");
         if (type === "create") {
           await aevatarAI.services.agent.createAgent(params);
         } else {
@@ -332,7 +333,16 @@ function EditGAevatarInnerCom({
         setBtnLoading(undefined);
       }
     },
-    [form, agentId, type, JSONSchemaProperties, toast, onSuccess]
+    [
+      form,
+      agentId,
+      type,
+      defaultAgentType,
+      agentTypeList,
+      JSONSchemaProperties,
+      toast,
+      onSuccess,
+    ]
   );
 
   const onAgentTypeChange = useCallback(

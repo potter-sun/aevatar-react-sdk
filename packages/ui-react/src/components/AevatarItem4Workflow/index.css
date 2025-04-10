@@ -10,11 +10,11 @@
     right: 0px;
     bottom: 0px;
     content: "";
-    border-left: 2rem solid transparent;
+    border-left: 15px solid transparent;
   }
   @media (hover: hover) {
     .sdk\:hover\:cutCorner-border:hover:before {
-      border-bottom: 2rem solid var(--sdk-border-color);
+      border-bottom: 15px solid var(--sdk-border-color);
     }
   }
   .sdk\:cutCorner:after {
@@ -22,8 +22,8 @@
     right: -1px;
     bottom: -1px;
     content: "";
-    border-bottom: 2rem solid;
+    border-bottom: 15px solid;
     border-color: black;
-    border-left: 2rem solid transparent;
+    border-left: 15px solid transparent;
   }
 }

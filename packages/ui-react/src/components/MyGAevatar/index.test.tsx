@@ -46,13 +46,13 @@ describe("MyGAevatar", () => {
           bio: "this is a lively and adorable physicist",
           topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
         },
-        grainId: "8c2baec4-3eca-4403-a113-b05942412770",
+        businessAgentGrainId: "8c2baec4-3eca-4403-a113-b05942412770",
         agentGuid: "",
       },
     ]);
 
     render(
-      <MyGAevatar userAddress="test-user" onEditGaevatar={onEditGaevatarMock} />
+      <MyGAevatar onEditGaevatar={onEditGaevatarMock} />
     );
 
     // expect(screen.getByTestId("page-loading")).toBeInTheDocument();
@@ -106,17 +106,18 @@ describe("MyGAevatar", () => {
           bio: "this is a lively and adorable physicist",
           topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
         },
-        grainId: "8c2baec4-3eca-4403-a113-b05942412770",
+        businessAgentGrainId: "8c2baec4-3eca-4403-a113-b05942412770",
         agentGuid: "",
+        grainId: ""
       },
     ]);
-
     render(
-      <MyGAevatar userAddress="test-user" onEditGaevatar={onEditGaevatarMock} />
+      <MyGAevatar onEditGaevatar={onEditGaevatarMock} onNewGAevatar={onNewGAevatarMock} />
     );
 
     await waitFor(() =>
       expect(aevatarAI.services.agent.getAgents).toHaveBeenCalled()
+    );
     );
 
     fireEvent.click(screen.getByRole("img"));
